@@ -1,0 +1,1 @@
+export const API_USER="http://shop.mondalsoft.com/api/user"
