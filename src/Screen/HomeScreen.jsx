@@ -1,12 +1,14 @@
 import { StatusBar, StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
+import AddFoodCatagorie from './AddFoodCatagorie'
 
 const HomeScreen = ({ navigation }) => {
     
     return (
-        <View style={{ backgroundColor: "#fff", flex: 1 }}>
+        <AddFoodCatagorie/>
+        // <View style={{ backgroundColor: "#fff", flex: 1 }}>
             
-        </View>
+        // </View>
     )
 }
 
