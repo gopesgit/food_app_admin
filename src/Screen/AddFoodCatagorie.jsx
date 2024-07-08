@@ -24,7 +24,7 @@ export default function AddFoodCatagorie({ navigation }) {
                     <Icon
                         name="file-image-plus"
                         size={75}
-                        color={"#000"}
+                        color={"#ddd"}
                         type="material-community"
                     />
                 </Pressable>

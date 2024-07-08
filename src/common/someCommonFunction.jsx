@@ -10,7 +10,8 @@ export const login = async (data,setUser) => {
         console.log('Response:', response.data);
         await AsyncStorage.setItem('auth', JSON.stringify(response.data))
         setUser(response.data)
-    } catch (error) {               
+    } catch (error) {   
+      console.log(error);            
        ToastAndroid.showWithGravity(error.response.data.message,ToastAndroid.LONG,ToastAndroid.TOP)
              
     }

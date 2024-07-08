@@ -50,11 +50,27 @@ export const globalStyle = StyleSheet.create({
 
         elevation: 2,
     },
-    inputBoxArea: {
+    inputBoxArea: {        
         backgroundColor: "#ffffff",
         borderRadius: 10,
         marginVertical: 5,
         paddingLeft: 10,
+        color: "#af9f85",
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 1.41,
+
+        elevation: 2,
+    },
+    inputBoxImage: {        
+        backgroundColor: "#ffffff",
+        borderRadius: 10,
+        marginVertical: 5,
+        padding:8,        
         color: "#af9f85",
         shadowColor: '#000',
         shadowOffset: {
