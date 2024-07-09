@@ -4,7 +4,7 @@ import { globalStyle } from '../common/style'
 import { Button, Input, Icon, ListItem, Header } from '@rneui/base'
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios'
-const AddRestaurant = () => {
+const AddFoodItem = () => {
   const [image, setImage] = useState(null);
   const [logo, setLogo] = useState(null);
   const [name, setName] = useState(null);
@@ -16,8 +16,7 @@ const AddRestaurant = () => {
   const [email, setEmail] = useState(null);
   const [licenses, setLicenses] = useState(null);
   const [branch, setBranch] = useState(null);
-  const pickImage = async (data) => {
-   
+  const pickImage = async (data) => {   
     //console.log(data);
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -95,39 +94,26 @@ const AddRestaurant = () => {
               
                   {image && <Image source={{ uri: image }} style={styles.image} />}
                 </Pressable>
-                <View style={{ position: 'absolute', top: '30%', left: '43%',backgroundColor:"#000", padding:2,borderRadius:40 }}>
-                  <Pressable  onPress={() => pickImage(setLogo)}>
-                  {!logo &&
-                  <Icon
-                    name="image-outline"
-                    size={50}
-                    color={"#fff"}
-                    type="material-community"
-                  
-                  />
-                  }
-                  {logo && <Image source={{ uri: logo }} style={{width:50, height:50,borderRadius:30}} />}
-                  </Pressable>
-                </View>
+               
               </View>
             </View>
            
             <TextInput
-              placeholder='Enter name of Restaurant'
+              placeholder='Enter name of Food'
               value={name}
               onChangeText={(text) => setName(text)}
               style={globalStyle.inputBox}
             />
 
             <TextInput
-              placeholder='Enter name of Restaurant'
+              placeholder='Price Of Food'
               value={name}
               onChangeText={(text) => setName(text)}
               style={globalStyle.inputBox}
             />
 
             <TextInput
-              placeholder='Address of Restaurant'
+              placeholder='description  of food item'
               value={address}
               onChangeText={(text) => setAddress(text)}
               multiline
@@ -135,7 +121,7 @@ const AddRestaurant = () => {
               style={globalStyle.inputBoxArea}
             />
             <TextInput
-              placeholder='Description of Restaurant'
+              placeholder='ingredients of food '
               value={description}
               onChangeText={(text) => setDescription(text)}
               multiline
@@ -143,38 +129,44 @@ const AddRestaurant = () => {
               style={globalStyle.inputBoxArea}
             />
             <TextInput
-              placeholder='Enter email address of Restaurant'
+              placeholder='package_items_count'
               value={email}
               onChangeText={(text) => setEmail(text)}
               style={globalStyle.inputBox}
 
             />
             <TextInput
-              placeholder='Enter Pin code'
+              placeholder='weight'
               value={pincode}
               onChangeText={(text) => setPincode(text)}
               style={globalStyle.inputBox}
             />
             <TextInput
-              placeholder='location latitude'
+              placeholder='unit'
               value={latitude}
               onChangeText={(text) => setLatitude(text)}
               style={globalStyle.inputBox}
             />
             <TextInput
-              placeholder='location longitude'
+              placeholder='featured'
               value={longitude}
               onChangeText={(text) => setLongitude(text)}
               style={globalStyle.inputBox}
             />
             <TextInput
-              placeholder='licenses'
+              placeholder='deliverable'
               value={licenses}
               onChangeText={(text) => setLicenses(text)}
               style={globalStyle.inputBox}
             />
             <TextInput
-              placeholder='branch'
+              placeholder='restaurant name'
+              value={branch}
+              onChangeText={(text) => setBranch(text)}
+              style={globalStyle.inputBox}
+            />
+            <TextInput
+              placeholder='food categorie'
               value={branch}
               onChangeText={(text) => setBranch(text)}
               style={globalStyle.inputBox}
@@ -188,7 +180,7 @@ const AddRestaurant = () => {
   )
 }
 
-export default AddRestaurant
+export default AddFoodItem
 
 const styles = StyleSheet.create({
   image: {

@@ -6,7 +6,7 @@ import AddFoodCatagorie from './AddFoodCatagorie'
 const HomeScreen = ({ navigation }) => {
     
     return (
-        <AddRestaurant/>
+        <AddFoodCatagorie/>
         //<AddFoodCatagorie/>
         // <View style={{ backgroundColor: "#fff", flex: 1 }}>
            

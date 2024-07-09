@@ -3,6 +3,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Icon } from '@rneui/base'
 import Header from '../componet/Header'
 import HomeScreen from '../Screen/HomeScreen'
+import AddRestaurant from '../Screen/AddRestaurant'
+import AddFoodItem from '../Screen/AddFoodItem'
 const TabNavi = createBottomTabNavigator()
 const HomeNavigation = () => {
   return (
@@ -21,19 +23,20 @@ const HomeNavigation = () => {
             headerShown:true,
           }}
 
-          component={HomeScreen}
+          component={AddRestaurant}
         />
-        {/* <TabNavi.Screen
+        <TabNavi.Screen
         options={{
-          title:"Transaction History",
+          title:"Add Food Catagorie",
           headerShown:true,
           tabBarIcon: ({ color, size }) => (
             <Icon name="transform" size={size} color={color} />
           ),
         }}
-        name="ExpenseTab"
-        component={ExpenseScreen}
+        name="Add Food Catagorie"
+        component={HomeScreen}
         />
+        
         <TabNavi.Screen
         options={{
           title:"Fund",
@@ -43,8 +46,8 @@ const HomeNavigation = () => {
           ),
         }}
         name="Add Fund Type"
-        component={AddCRDRType}
-        /> */}
+        component={AddFoodItem}
+        />
       </TabNavi.Navigator>
    
   )
