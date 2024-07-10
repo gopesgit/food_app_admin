@@ -2,78 +2,33 @@ import { KeyboardAvoidingView, ScrollView, StatusBar, StyleSheet, TextInput, Vie
 import React, { useContext, useState } from 'react'
 import { globalStyle } from '../common/style'
 import { Button, Input, Icon, ListItem, Header } from '@rneui/base'
-import * as ImagePicker from 'expo-image-picker';
-import axios from 'axios'
+import { insertData, pickImage } from '../common/someCommonFunction'
+import { API_FOOD } from '../common/apiURL'
 const AddFoodItem = () => {
-  const [image, setImage] = useState(null);
-  const [logo, setLogo] = useState(null);
+  const [image, setImage] = useState(null);  
   const [name, setName] = useState(null);
-  const [address, setAddress] = useState(null);
+  const [price, setPrice] = useState(null);
   const [description, setDescription] = useState(null);
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
-  const [pincode, setPincode] = useState(null);
-  const [email, setEmail] = useState(null);
-  const [licenses, setLicenses] = useState(null);
-  const [branch, setBranch] = useState(null);
-  const pickImage = async (data) => {   
-    //console.log(data);
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log(result);
-
-    if (!result.canceled) {
-      data(result.assets[0].uri);
-    }
-  };
+  const [ingredients, setIngredients] = useState(null);
+  const [package_items_count, setPackageItemsCount] = useState(null);
+  const [weight, setWeight] = useState(null);
+  const [unit, setUnit] = useState(null);
+  const [featured, setFeatured] = useState(null);
+  const [deliverable, setDeliverable] = useState(null);
+  const [restaurant, setRestaurant] = useState(null);
+  const [food_categorie, setFoodCategorie] = useState(null);
   const handelSubmit = async () => {
-    let data = { name, address, description, latitude, longitude, pincode, email, licenses, branch }
+    let data = { name,price,description,ingredients,package_items_count,weight,unit,featured,deliverable,restaurant,food_categorie}
     let formdata = new FormData()
     formdata.append('image', {
       uri: image,
       type: 'image/jpeg',  // Adjust according to your file type
       name: 'photo.jpg'    // Adjust file name as needed
     });
-
-    formdata.append('logo', {
-      uri: logo,
-      type: 'image/jpeg',  // Adjust according to your file type
-      name: 'logo.jpg'     // Adjust file name as needed
-    });
     Object.keys(data).forEach(key => {
       formdata.append(key, data[key]);
     });
-    console.log(formdata);
-    try {
-      let response = await axios.post(
-        'http://shop.mondalsoft.com/api/restaurant',
-        formdata,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
-
-      console.log('Upload successful! ', response.data);
-    } catch (error) {
-      console.error('Upload failed! ', error);
-    }
-
-    // let response = await axios.post('http://shop.mondalsoft.com/api/restaurant', formdata, {
-    //   headers: {
-    //     'Content-Type': 'multipart/form-data',
-    //   },
-    // });
-
-    // console.log('Upload successful! ', response.data);
-    //console.log({name,address,description,latitude,longitude,pincode,email,licenses,branch,image,logo});
+    await insertData(formdata,API_FOOD)
   }
   return (
     <View style={{ flex: 1, backgroundColor: "#fff" }}>
@@ -81,23 +36,22 @@ const AddFoodItem = () => {
         <ScrollView>
           <View style={{ marginHorizontal: 12 }}>
             <View style={globalStyle.inputBoxImage}>
-              <View style={{ position: 'relative'}}>
+              <View style={{ position: 'relative' }}>
                 <Pressable onPress={() => pickImage(setImage)}>
-                  {!image && 
-                  <Icon
-                    name="file-image-plus"
-                    size={200}
-                    color={"#ddd"}
-                    type="material-community"                   
-                  />
-                }
-              
+                  {!image &&
+                    <Icon
+                      name="file-image-plus"
+                      size={200}
+                      color={"#ddd"}
+                      type="material-community"
+                    />
+                  }
                   {image && <Image source={{ uri: image }} style={styles.image} />}
                 </Pressable>
-               
+
               </View>
             </View>
-           
+
             <TextInput
               placeholder='Enter name of Food'
               value={name}
@@ -107,21 +61,14 @@ const AddFoodItem = () => {
 
             <TextInput
               placeholder='Price Of Food'
-              value={name}
-              onChangeText={(text) => setName(text)}
+              value={price}
+              onChangeText={(text) => setPrice(text)}
               style={globalStyle.inputBox}
+              keyboardType='number-pad'      
             />
 
             <TextInput
               placeholder='description  of food item'
-              value={address}
-              onChangeText={(text) => setAddress(text)}
-              multiline
-              numberOfLines={4}
-              style={globalStyle.inputBoxArea}
-            />
-            <TextInput
-              placeholder='ingredients of food '
               value={description}
               onChangeText={(text) => setDescription(text)}
               multiline
@@ -129,49 +76,57 @@ const AddFoodItem = () => {
               style={globalStyle.inputBoxArea}
             />
             <TextInput
+              placeholder='ingredients of food '
+              value={ingredients}
+              onChangeText={(text) => setIngredients(text)}
+              multiline
+              numberOfLines={4}
+              style={globalStyle.inputBoxArea}
+            />
+            <TextInput
               placeholder='package_items_count'
-              value={email}
-              onChangeText={(text) => setEmail(text)}
+              value={package_items_count}
+              onChangeText={(text) => setPackageItemsCount(text)}
               style={globalStyle.inputBox}
 
             />
             <TextInput
               placeholder='weight'
-              value={pincode}
-              onChangeText={(text) => setPincode(text)}
+              value={weight}
+              onChangeText={(text) => setWeight(text)}
               style={globalStyle.inputBox}
             />
             <TextInput
               placeholder='unit'
-              value={latitude}
-              onChangeText={(text) => setLatitude(text)}
+              value={unit}
+              onChangeText={(text) => setUnit(text)}
               style={globalStyle.inputBox}
             />
             <TextInput
               placeholder='featured'
-              value={longitude}
-              onChangeText={(text) => setLongitude(text)}
+              value={featured}
+              onChangeText={(text) => setFeatured(text)}
               style={globalStyle.inputBox}
             />
             <TextInput
               placeholder='deliverable'
-              value={licenses}
-              onChangeText={(text) => setLicenses(text)}
+              value={deliverable}
+              onChangeText={(text) => setDeliverable(text)}
               style={globalStyle.inputBox}
             />
             <TextInput
               placeholder='restaurant name'
-              value={branch}
-              onChangeText={(text) => setBranch(text)}
+              value={restaurant}
+              onChangeText={(text) => setRestaurant(text)}
               style={globalStyle.inputBox}
             />
             <TextInput
               placeholder='food categorie'
-              value={branch}
-              onChangeText={(text) => setBranch(text)}
+              value={food_categorie}
+              onChangeText={(text) => setFoodCategorie(text)}
               style={globalStyle.inputBox}
             />
-            <Button title="Add Restaurant " onPress={handelSubmit} />
+            <Button title="Add Food " onPress={handelSubmit} />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -184,9 +139,9 @@ export default AddFoodItem
 
 const styles = StyleSheet.create({
   image: {
-    width:'100%',
+    width: '100%',
     height: 200,
-    borderRadius:12,
-   
+    borderRadius: 12,
+
   },
 })
