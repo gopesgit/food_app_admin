@@ -26,9 +26,10 @@ return true;
 }
 export const insertData = async (formdata, APIURL) => {
   console.log({formdata,APIURL});
+  console.log(formdata);
   try {
     let response = await axios.post(
-      'http://shop.mondalsoft.com/api/restaurant',
+     APIURL,
       formdata,
       {
         headers: {

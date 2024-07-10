@@ -23,7 +23,7 @@ const AddRestaurant = () => {
       ToastAndroid.showWithGravity(`Missing or empty field`, ToastAndroid.LONG, ToastAndroid.TOP)
       return
     }
-    console.log(image);
+    //console.log(image);
     let formdata = new FormData()
     formdata.append('image', {
       uri: image,
