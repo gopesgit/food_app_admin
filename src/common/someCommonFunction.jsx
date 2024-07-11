@@ -25,7 +25,7 @@ export const checkFormData=(data,requiredFields)=>{
 return true;
 }
 export const insertData = async (formdata, APIURL) => {
-  console.log({formdata,APIURL});
+  console.log(APIURL);
   console.log(formdata);
   try {
     let response = await axios.post(
@@ -37,7 +37,7 @@ export const insertData = async (formdata, APIURL) => {
         },
       }
     );
-    console.log('Upload successful! ', response.data);
+    console.log('Upload successful! ', response);
     ToastAndroid.showWithGravity('Add Data', ToastAndroid.LONG, ToastAndroid.TOP)
   } catch (error) {
     console.error('Upload failed! ', error);

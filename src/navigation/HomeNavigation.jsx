@@ -5,51 +5,53 @@ import Header from '../componet/Header'
 import HomeScreen from '../Screen/HomeScreen'
 import AddRestaurant from '../Screen/AddRestaurant'
 import AddFoodItem from '../Screen/AddFoodItem'
+import { OperationProvider } from '../context/operationContext'
 const TabNavi = createBottomTabNavigator()
 const HomeNavigation = () => {
   return (
- 
+    <OperationProvider>
       <TabNavi.Navigator
         screenOptions={{
-          headerRight:()=><Header/>
+          headerRight: () => <Header />
         }}
       >
         <TabNavi.Screen
           name="HomeTab"
-          options={{title:"Home",
+          options={{
+            title: "Home",
             tabBarIcon: ({ color, size }) => (
               <Icon name="home" size={size} color={color} />
             ),
-            headerShown:true,
+            headerShown: true,
           }}
 
           component={AddRestaurant}
         />
         <TabNavi.Screen
-        options={{
-          title:"Add Food Catagorie",
-          headerShown:true,
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="transform" size={size} color={color} />
-          ),
-        }}
-        name="Add Food Catagorie"
-        component={HomeScreen}
+          options={{
+            title: "Add Food Catagorie",
+            headerShown: true,
+            tabBarIcon: ({ color, size }) => (
+              <Icon name="transform" size={size} color={color} />
+            ),
+          }}
+          name="Add Food Catagorie"
+          component={HomeScreen}
         />
-        
+
         <TabNavi.Screen
-        options={{
-          title:"Fund",
-          headerShown:true,
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="currency-rupee" size={size} color={color} />
-          ),
-        }}
-        name="Add Fund Type"
-        component={AddFoodItem}
+          options={{
+            title: "Fund",
+            headerShown: true,
+            tabBarIcon: ({ color, size }) => (
+              <Icon name="currency-rupee" size={size} color={color} />
+            ),
+          }}
+          name="Add Fund Type"
+          component={AddFoodItem}
         />
       </TabNavi.Navigator>
-   
+    </OperationProvider>
   )
 }
 

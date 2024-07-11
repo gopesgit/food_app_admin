@@ -4,7 +4,12 @@ import { globalStyle } from '../common/style'
 import { Button, Input, Icon, ListItem, Header } from '@rneui/base'
 import { checkFormData, insertData, isValidImageURI, pickImage } from '../common/someCommonFunction';
 import { API_RESTAURANT } from '../common/apiURL';
+import { OperationContext } from '../context/operationContext';
+import { AuthContext } from '../context/authContex';
 const AddRestaurant = () => {
+  const {restaurant}=useContext(OperationContext);
+  const {user}=useContext(AuthContext);
+  //console.log(restaurant);
   const [image, setImage] = useState(null);
   const [logo, setLogo] = useState(null);
   const [name, setName] = useState(null);
@@ -35,9 +40,11 @@ const AddRestaurant = () => {
       type: 'image/jpeg',  // Adjust according to your file type
       name: 'logo.jpg'     // Adjust file name as needed
     });
+    formdata.append('user_id',user.email)
     Object.keys(data).forEach(key => {
       formdata.append(key, data[key]);
     });
+
     try {
       await insertData(formdata, API_RESTAURANT)
       setName('')

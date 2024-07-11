@@ -6,10 +6,10 @@ import { AuthProvider } from '../context/authContex'
 
 const RootNavigation = () => {
   return (
-    <NavigationContainer>   
+    <NavigationContainer>
       <AuthProvider>
-        <AuthNavigation />    
-        </AuthProvider>  
+        <AuthNavigation />
+      </AuthProvider>
     </NavigationContainer>
   )
 }

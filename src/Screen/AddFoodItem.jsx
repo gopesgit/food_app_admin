@@ -1,24 +1,35 @@
-import { KeyboardAvoidingView, ScrollView, StatusBar, StyleSheet, TextInput, View, Image, Text, Pressable, Alert } from 'react-native'
+import { KeyboardAvoidingView, ScrollView, StatusBar, StyleSheet, TextInput, View, Image, Text, Pressable, Alert, ToastAndroid } from 'react-native'
 import React, { useContext, useState } from 'react'
 import { globalStyle } from '../common/style'
 import { Button, Input, Icon, ListItem, Header } from '@rneui/base'
-import { insertData, pickImage } from '../common/someCommonFunction'
+import { checkFormData, insertData, pickImage } from '../common/someCommonFunction'
 import { API_FOOD } from '../common/apiURL'
+import { OperationContext } from '../context/operationContext'
+import { Dropdown } from 'react-native-element-dropdown'
 const AddFoodItem = () => {
-  const [image, setImage] = useState(null);  
-  const [name, setName] = useState(null);
-  const [price, setPrice] = useState(null);
-  const [description, setDescription] = useState(null);
-  const [ingredients, setIngredients] = useState(null);
-  const [package_items_count, setPackageItemsCount] = useState(null);
-  const [weight, setWeight] = useState(null);
-  const [unit, setUnit] = useState(null);
-  const [featured, setFeatured] = useState(null);
-  const [deliverable, setDeliverable] = useState(null);
-  const [restaurant, setRestaurant] = useState(null);
-  const [food_categorie, setFoodCategorie] = useState(null);
+  const { restaurant, foodcategorie } = useContext(OperationContext);
+  // console.log("RES=>",restaurant);
+  // console.log("FoodCAT=>",foodcategorie);
+  const [image, setImage] = useState(null);
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const [description, setDescription] = useState("");
+  const [ingredients, setIngredients] = useState("");
+  const [package_items_count, setPackageItemsCount] = useState("");
+  const [weight, setWeight] = useState("");
+  const [unit, setUnit] = useState("");
+  const [featured, setFeatured] = useState("");
+  const [deliverable, setDeliverable] = useState("");
+  const [restaurant_id, setRestaurant] = useState("");
+  const [category_id, setFoodCategorie] = useState("");
+  const [discount_price, setDiscountPrice] = useState("");
   const handelSubmit = async () => {
-    let data = { name,price,description,ingredients,package_items_count,weight,unit,featured,deliverable,restaurant,food_categorie}
+    let data = { name, price, description, ingredients, package_items_count, weight, unit, featured, deliverable, restaurant_id, category_id, discount_price }
+    const requiredFields = ['name', 'price', 'description', 'restaurant_id', 'category_id'];
+    if (!checkFormData(data, requiredFields) || !image) {
+      ToastAndroid.showWithGravity(`Missing or empty field`, ToastAndroid.LONG, ToastAndroid.TOP)
+      return
+    }
     let formdata = new FormData()
     formdata.append('image', {
       uri: image,
@@ -28,7 +39,8 @@ const AddFoodItem = () => {
     Object.keys(data).forEach(key => {
       formdata.append(key, data[key]);
     });
-    await insertData(formdata,API_FOOD)
+    //console.log(formdata);
+    await insertData(formdata, API_FOOD)
   }
   return (
     <View style={{ flex: 1, backgroundColor: "#fff" }}>
@@ -64,7 +76,14 @@ const AddFoodItem = () => {
               value={price}
               onChangeText={(text) => setPrice(text)}
               style={globalStyle.inputBox}
-              keyboardType='number-pad'      
+              keyboardType='number-pad'
+            />
+            <TextInput
+              placeholder='Discount of Food Price'
+              value={discount_price}
+              onChangeText={(text) => setDiscountPrice(text)}
+              style={globalStyle.inputBox}
+              keyboardType='number-pad'
             />
 
             <TextInput
@@ -114,18 +133,38 @@ const AddFoodItem = () => {
               onChangeText={(text) => setDeliverable(text)}
               style={globalStyle.inputBox}
             />
-            <TextInput
-              placeholder='restaurant name'
-              value={restaurant}
-              onChangeText={(text) => setRestaurant(text)}
-              style={globalStyle.inputBox}
-            />
-            <TextInput
-              placeholder='food categorie'
-              value={food_categorie}
-              onChangeText={(text) => setFoodCategorie(text)}
-              style={globalStyle.inputBox}
-            />
+            {restaurant &&
+              <View >
+                <Dropdown
+                  style={styles.dropdown}
+                  data={restaurant}
+                  labelField="name"
+                  // valueField="value"
+                  placeholder="Select Transaction Type"
+                  onChange={(item) => {
+                    console.log("=>", item.id)
+                    setRestaurant(item.id)
+                    //setTrantype(item.value)
+                  }}
+                />
+              </View>
+            }
+          {foodcategorie &&
+              <View >
+                <Dropdown
+                  style={styles.dropdown}
+                  data={foodcategorie}
+                  labelField="name"
+                  // valueField="value"
+                  placeholder="Select Transaction Type"
+                  onChange={(item) => {
+                    console.log("=>", item.id)
+                    setFoodCategorie(item.id)
+                    //setTrantype(item.value)
+                  }}
+                />
+              </View>
+            }
             <Button title="Add Food " onPress={handelSubmit} />
           </View>
         </ScrollView>
@@ -144,4 +183,20 @@ const styles = StyleSheet.create({
     borderRadius: 12,
 
   },
+  dropdown: {
+    height: 40,
+    backgroundColor: "#ffffff",
+    borderRadius: 10,
+    marginVertical: 5,
+    paddingLeft: 10,
+    color: "#af9f85",
+    shadowColor: '#000',
+    shadowOffset: {
+        width: 0,
+        height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    elevation: 2,
+},
 })

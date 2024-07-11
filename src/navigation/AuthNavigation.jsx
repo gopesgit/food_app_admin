@@ -14,6 +14,7 @@ const AuthNavigation = () => {
   return (
     <AuthStack.Navigator screenOptions={{ headerShown: false }}>
       {login ?
+      
         <AuthStack.Screen
           name="HomeNavigation"
           component={HomeNavigation}
