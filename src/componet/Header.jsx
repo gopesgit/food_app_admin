@@ -9,6 +9,7 @@ const Header = () => {
     const logout=async()=>{
         setUser({token:null})
         await AsyncStorage.removeItem('auth');
+        
     }
   return (
     <View style={{ marginRight: 10, flexDirection: 'row',gap:10 }}>

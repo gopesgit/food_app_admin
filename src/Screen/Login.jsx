@@ -16,7 +16,7 @@ export default function Login({ navigation }) {
     const handelSubmit=async ()=>{
         setLoading(true)
         if(!email || !password){
-            ToastAndroid.showWithGravity("Please fill field",ToastAndroid.SHORT,ToastAndroid.TOP)
+            //ToastAndroid.showWithGravity("Please fill field",ToastAndroid.SHORT,ToastAndroid.TOP)
             setLoading(false) 
             return
         }

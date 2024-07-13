@@ -131,7 +131,7 @@ const AddFoodItem = () => {
               placeholder='deliverable'
               value={deliverable}
               onChangeText={(text) => setDeliverable(text)}
-              style={globalStyle.inputBox}
+              style={[globalStyle.inputBox]}
             />
             {restaurant &&
               <View >

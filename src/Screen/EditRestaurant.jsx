@@ -7,7 +7,7 @@ import { API_RESTAURANT } from '../common/apiURL';
 import { OperationContext } from '../context/operationContext';
 import { AuthContext } from '../context/authContex';
 import Header from '../componet/Header';
-const AddRestaurant = ({ setModalVisible }) => {
+const EditRestaurant = ({ setModalVisible }) => {
   const { restaurant } = useContext(OperationContext);
   const { user } = useContext(AuthContext);
   const showAddRestaurant = !restaurant || restaurant.length === 0;
@@ -180,7 +180,7 @@ const AddRestaurant = ({ setModalVisible }) => {
   )
 }
 
-export default AddRestaurant
+export default EditRestaurant
 
 const styles = StyleSheet.create({
   image: {

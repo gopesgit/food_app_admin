@@ -3,6 +3,7 @@ import { API_USER } from "./apiURL";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ToastAndroid } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
+
 export const login = async (data, setUser) => {
   try {
     const response = await axios.get(API_USER, { params: data });
@@ -11,9 +12,10 @@ export const login = async (data, setUser) => {
     setUser(response.data)
   } catch (error) {
     console.log(error);
-    ToastAndroid.showWithGravity(error.response.data.message, ToastAndroid.LONG, ToastAndroid.TOP)
+    //ToastAndroid.showWithGravity(error.response.data.message, ToastAndroid.LONG, ToastAndroid.TOP)
   }
 }
+
 export const checkFormData=(data,requiredFields)=>{
   for (let key of requiredFields) {
     if (!data[key]) {

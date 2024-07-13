@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Icon } from '@rneui/base'
 import Header from '../componet/Header'
 import HomeScreen from '../Screen/HomeScreen'
-import AddRestaurant from '../Screen/AddRestaurant'
+
 import AddFoodItem from '../Screen/AddFoodItem'
 import { OperationProvider } from '../context/operationContext'
 const TabNavi = createBottomTabNavigator()
@@ -25,7 +25,7 @@ const HomeNavigation = () => {
             headerShown: true,
           }}
 
-          component={AddRestaurant}
+          component={HomeScreen}
         />
         <TabNavi.Screen
           options={{
