@@ -9,20 +9,14 @@ const HomeScreen = ({ navigation }) => {
     const { restaurant } = useContext(OperationContext);
     const showAddRestaurant = !restaurant || restaurant.length === 0;
     const [modalvisible, setModalVisible] = useState();
+    const [editRestaurant,setEditRestaurant]=useState(null);
+    const [editResModalVisible,setEditResModalVisible]=useState(false);
     useEffect(() => {
         !showAddRestaurant ? setModalVisible(false) : setModalVisible(true)
     }, [restaurant])
-    const handelEditModal = () => {
-        return(
-        <Modal
-            visible={modalvisible}
-            onRequestClose={() => {
-                !showAddRestaurant && setModalVisible(!modalvisible);
-            }}
-        >
-            <EditRestaurant setModalVisible={setModalVisible} />
-        </Modal>
-        )
+    const openEditModal=(item)=>{
+        setEditRestaurant(item)
+        setEditResModalVisible(true)
     }
     return (
         <View style={{ backgroundColor: "#fff", flex: 1 }}>
@@ -31,7 +25,7 @@ const HomeScreen = ({ navigation }) => {
             {!showAddRestaurant && (
                 <ScrollView>
                     {restaurant.map((item, index) => (
-                        <Pressable key={index} onPress={() => handelEditModal()}>
+                        <Pressable key={index} onPress={() => openEditModal(item)}>
                             <RestaurantRow item={item} />
                         </Pressable>
                     ))}
@@ -45,6 +39,14 @@ const HomeScreen = ({ navigation }) => {
                 }}
             >
                 <AddRestaurant setModalVisible={setModalVisible} />
+            </Modal>
+            <Modal
+                visible={editResModalVisible}
+                onRequestClose={() => {
+                    setEditResModalVisible(!editResModalVisible);
+                }}
+            >
+                <EditRestaurant setModalVisible={setEditResModalVisible} item={editRestaurant} />
             </Modal>
         </View>
     )

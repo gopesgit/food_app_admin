@@ -73,7 +73,9 @@ const AddRestaurant = ({ setModalVisible }) => {
       <KeyboardAvoidingView>
         <ScrollView stickyHeaderIndices={[0]}>
           <View style={{alignItems:'flex-end',marginHorizontal:12}}>
+          {showAddRestaurant &&
             <Header />
+          }
           </View>
 
           <View style={{ marginHorizontal: 12 }}>

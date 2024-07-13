@@ -7,12 +7,12 @@ import { API_RESTAURANT } from '../common/apiURL';
 import { OperationContext } from '../context/operationContext';
 import { AuthContext } from '../context/authContex';
 import Header from '../componet/Header';
-const EditRestaurant = ({ setModalVisible }) => {
+const EditRestaurant = ({ setModalVisible,item }) => {
   const { restaurant } = useContext(OperationContext);
   const { user } = useContext(AuthContext);
   const showAddRestaurant = !restaurant || restaurant.length === 0;
-  
-  console.log("Rest", restaurant);
+  console.log("DDD=>",item);
+  //console.log("Rest", restaurant);
   const [image, setImage] = useState(null);
   const [logo, setLogo] = useState(null);
   const [name, setName] = useState(null);
@@ -73,7 +73,9 @@ const EditRestaurant = ({ setModalVisible }) => {
       <KeyboardAvoidingView>
         <ScrollView stickyHeaderIndices={[0]}>
           <View style={{alignItems:'flex-end',marginHorizontal:12}}>
+          {showAddRestaurant &&
             <Header />
+          }
           </View>
 
           <View style={{ marginHorizontal: 12 }}>
