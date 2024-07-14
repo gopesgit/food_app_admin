@@ -12,7 +12,7 @@ export const login = async (data, setUser) => {
     setUser(response.data)
   } catch (error) {
     console.log(error);
-    //ToastAndroid.showWithGravity(error.response.data.message, ToastAndroid.LONG, ToastAndroid.TOP)
+    ToastAndroid.showWithGravity(error.response.data.message, ToastAndroid.LONG, ToastAndroid.TOP)
   }
 }
 

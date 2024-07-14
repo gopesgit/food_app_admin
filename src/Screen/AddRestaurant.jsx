@@ -1,18 +1,17 @@
-import { KeyboardAvoidingView, ScrollView, StatusBar, StyleSheet, TextInput, View, Image, Text, Pressable, Alert, ToastAndroid } from 'react-native'
+import { KeyboardAvoidingView, ScrollView, StatusBar, StyleSheet, TextInput, View, Image, Pressable, ToastAndroid } from 'react-native'
 import React, { useContext, useState } from 'react'
 import { globalStyle } from '../common/style'
-import { Button, Input, Icon, ListItem } from '@rneui/base'
-import { checkFormData, insertData, isValidImageURI, pickImage } from '../common/someCommonFunction';
+import { Button, Icon} from '@rneui/base'
+import { checkFormData, insertData, pickImage } from '../common/someCommonFunction';
 import { API_RESTAURANT } from '../common/apiURL';
 import { OperationContext } from '../context/operationContext';
 import { AuthContext } from '../context/authContex';
-import Header from '../componet/Header';
-const AddRestaurant = ({ setModalVisible }) => {
-  const { restaurant } = useContext(OperationContext);
-  const { user } = useContext(AuthContext);
-  const showAddRestaurant = !restaurant || restaurant.length === 0;
-  
-  console.log("Rest", restaurant);
+
+const AddRestaurant = ({setModalVisible}) => {
+  //console.log(navigation);  
+  const { allFunction } = useContext(OperationContext);
+  const { user } = useContext(AuthContext); 
+  const [loading,setLoading]=useState(false);
   const [image, setImage] = useState(null);
   const [logo, setLogo] = useState(null);
   const [name, setName] = useState(null);
@@ -49,6 +48,7 @@ const AddRestaurant = ({ setModalVisible }) => {
     });
 
     try {
+      setLoading(true)
       await insertData(formdata, API_RESTAURANT)
       setName('')
       setAddress('')
@@ -61,6 +61,9 @@ const AddRestaurant = ({ setModalVisible }) => {
       setLongitude('')
       setImage(null)
       setLogo(null)
+      setLoading(false)
+      allFunction()
+      setModalVisible(false)
       ToastAndroid.showWithGravity(`Data submit`, ToastAndroid.LONG, ToastAndroid.TOP)
     } catch (error) {
       ToastAndroid.showWithGravity(`Error`, ToastAndroid.LONG, ToastAndroid.TOP)
@@ -71,19 +74,9 @@ const AddRestaurant = ({ setModalVisible }) => {
     <View style={{ flex: 1, backgroundColor: "#fff" }}>
 
       <KeyboardAvoidingView>
-        <ScrollView stickyHeaderIndices={[0]}>
-          <View style={{alignItems:'flex-end',marginHorizontal:12}}>
-          {showAddRestaurant &&
-            <Header />
-          }
-          </View>
-
+        <ScrollView>
           <View style={{ marginHorizontal: 12 }}>
-            {!showAddRestaurant &&
-              <>
-                <Button title="Close " onPress={() => setModalVisible(false)} radius={'lg'} containerStyle={{ marginVertical: 8 }} />
-
-              </>}
+            
             <View style={globalStyle.inputBoxImage}>
               <View style={{ position: 'relative' }}>
                 <Pressable onPress={() => pickImage(setImage)}>
@@ -173,7 +166,13 @@ const AddRestaurant = ({ setModalVisible }) => {
               onChangeText={(text) => setBranch(text)}
               style={globalStyle.inputBox}
             />
-            <Button title="Add Restaurant " onPress={handelSubmit} radius={'lg'} containerStyle={{ marginVertical: 8 }} />
+            {loading?
+             <Button title="outline" type="solid" loading size='lg' />
+             :
+             <Button title="Add Restaurant " onPress={handelSubmit} radius={'lg'} containerStyle={{ marginVertical: 8 }} />
+          }
+           
+           
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

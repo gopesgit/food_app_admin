@@ -1,25 +1,56 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { Image, Modal, StyleSheet, Text, View } from 'react-native'
+import React, { useState } from 'react'
 import { tw } from 'react-native-tailwindcss';
+import { Button, Icon } from '@rneui/base';
+import EditRestaurant from '../Screen/EditRestaurant';
+import AddFoodItem from '../Screen/AddFoodItem';
+const RestaurantRow = ({ item }) => {
+    const [editResModalVisible, setEditResModalVisible] = useState(false);
+    const [addfoodmodal, setAddFoodModal] = useState(false);
+    return (
+        <View style={[tw.shadow, { shadowColor: "rgba(0, 0, 0, 0.5)", shadowRadius: 12, padding: 8, marginHorizontal: 'auto', borderRadius: 12, backgroundColor: "#fff", marginVertical: 4, alignItems: 'center' }]}>
 
-
-const RestaurantRow = ({item}) => {
-    console.log(item);
-  return (
-    <View style={[tw.flexRow, tw.itemsCenter,tw.p3, tw.roundedL, tw.shadow, tw.mB3, {shadowColor: "rgba(0, 0, 0, 0.5)", shadowRadius:12,padding:8}]}>      
-            <Image           
-                style={{ height: 100, width: 100,borderRadius:20 }}
-                source={{uri:item.logo_url}}
-            />
-            <View style={[tw.flex, tw.flex1,tw.spaceY3]}>
-                <View style={[tw.pL3]}>
-                    <Text style={[tw.textXl]}>{item.name}</Text>
-                    <Text style={[tw.textGray700]}>{item.description}</Text>
+            <View>
+                <Image
+                    style={{ height: 120, width: 120, borderRadius: 20 }}
+                    source={{ uri: item.logo_url }}
+                />
+                <View style={{ marginBottom: 4, position: 'absolute', marginTop: 20, marginLeft: 28 }}>
+                    <Button radius={"sm"} size='sm' containerStyle={{ backgroundColor: "#fff" }}
+                        onPress={() => setEditResModalVisible(!editResModalVisible)}>
+                        <Icon name="edit" color="#fff" size={20} />
+                        Edit
+                    </Button>
                 </View>
-              
+                <View style={{ marginBottom: 4, position: 'absolute', marginTop: 70, marginLeft: 9 }}>
+                    <Button radius={"sm"} size='sm' containerStyle={{ backgroundColor: "#fff" }}
+                    onPress={()=>setAddFoodModal(!addfoodmodal)}
+                    >
+                        <Icon name="add" color="#fff" size={20} />
+                        Add Food
+                    </Button>
+                </View>
             </View>
+
+            <Modal
+                visible={editResModalVisible}
+                onRequestClose={() => {
+                    setEditResModalVisible(!editResModalVisible);
+                }}
+            >
+                 <EditRestaurant item={item} />
+            </Modal>
+            <Modal
+                visible={addfoodmodal}
+                onRequestClose={() => {
+                    setAddFoodModal(!addfoodmodal);
+                }}
+            >
+           <AddFoodItem rest_id={item.id}/>
+            </Modal>
         </View>
-  )
+
+    )
 }
 
 export default RestaurantRow

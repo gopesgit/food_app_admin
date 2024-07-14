@@ -6,6 +6,7 @@ import HomeScreen from '../Screen/HomeScreen'
 
 import AddFoodItem from '../Screen/AddFoodItem'
 import { OperationProvider } from '../context/operationContext'
+import AddFoodCatagorie from '../Screen/AddFoodCatagorie'
 const TabNavi = createBottomTabNavigator()
 const HomeNavigation = () => {
   return (
@@ -36,7 +37,7 @@ const HomeNavigation = () => {
             ),
           }}
           name="Add Food Catagorie"
-          component={HomeScreen}
+          component={AddFoodCatagorie}
         />
 
         <TabNavi.Screen

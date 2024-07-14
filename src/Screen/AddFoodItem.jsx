@@ -6,7 +6,8 @@ import { checkFormData, insertData, pickImage } from '../common/someCommonFuncti
 import { API_FOOD } from '../common/apiURL'
 import { OperationContext } from '../context/operationContext'
 import { Dropdown } from 'react-native-element-dropdown'
-const AddFoodItem = () => {
+const AddFoodItem = ({rest_id}) => {
+  console.log(rest_id);
   const { restaurant, foodcategorie } = useContext(OperationContext);
   // console.log("RES=>",restaurant);
   // console.log("FoodCAT=>",foodcategorie);
@@ -20,7 +21,7 @@ const AddFoodItem = () => {
   const [unit, setUnit] = useState("");
   const [featured, setFeatured] = useState("");
   const [deliverable, setDeliverable] = useState("");
-  const [restaurant_id, setRestaurant] = useState("");
+  const [restaurant_id, setRestaurant] = useState(rest_id);
   const [category_id, setFoodCategorie] = useState("");
   const [discount_price, setDiscountPrice] = useState("");
   const handelSubmit = async () => {
@@ -133,22 +134,7 @@ const AddFoodItem = () => {
               onChangeText={(text) => setDeliverable(text)}
               style={[globalStyle.inputBox]}
             />
-            {restaurant &&
-              <View >
-                <Dropdown
-                  style={styles.dropdown}
-                  data={restaurant}
-                  labelField="name"
-                  // valueField="value"
-                  placeholder="Select Transaction Type"
-                  onChange={(item) => {
-                    console.log("=>", item.id)
-                    setRestaurant(item.id)
-                    //setTrantype(item.value)
-                  }}
-                />
-              </View>
-            }
+       
           {foodcategorie &&
               <View >
                 <Dropdown

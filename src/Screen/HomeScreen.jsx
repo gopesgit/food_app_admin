@@ -1,53 +1,57 @@
-import { Alert, Modal, Pressable, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native'
+import { Modal, ScrollView, StyleSheet, View } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { OperationContext } from '../context/operationContext'
 import AddRestaurant from './AddRestaurant';
 import RestaurantRow from '../componet/RestaurantRow';
-import { Button } from '@rneui/base';
-import EditRestaurant from './EditRestaurant';
+import { Button, Icon, Text } from '@rneui/base';
+import { tw } from 'react-native-tailwindcss';
+
 const HomeScreen = ({ navigation }) => {
     const { restaurant } = useContext(OperationContext);
     const showAddRestaurant = !restaurant || restaurant.length === 0;
-    const [modalvisible, setModalVisible] = useState();
-    const [editRestaurant,setEditRestaurant]=useState(null);
-    const [editResModalVisible,setEditResModalVisible]=useState(false);
-    useEffect(() => {
-        !showAddRestaurant ? setModalVisible(false) : setModalVisible(true)
-    }, [restaurant])
-    const openEditModal=(item)=>{
-        setEditRestaurant(item)
-        setEditResModalVisible(true)
-    }
+    const [modalvisible, setModalVisible] = useState(false);
     return (
         <View style={{ backgroundColor: "#fff", flex: 1 }}>
-            {/* {showAddRestaurant && setModalVisible(true)} */}
-            <Button title="Add Restaurant" size='lg' onPress={() => setModalVisible(!modalvisible)} />
-            {!showAddRestaurant && (
-                <ScrollView>
-                    {restaurant.map((item, index) => (
-                        <Pressable key={index} onPress={() => openEditModal(item)}>
-                            <RestaurantRow item={item} />
-                        </Pressable>
-                    ))}
-
+            <View>
+                <ScrollView
+                    horizontal={true}
+                    contentContainerStyle={styles.scrollViewContent}
+                    showsHorizontalScrollIndicator={false}
+                >
+                    {!showAddRestaurant && (
+                        restaurant.map((item, index) => (
+                            <View key={index}>
+                                <RestaurantRow item={item} />
+                            </View>
+                        ))
+                    )}
+                    <View style={{ backgroundColor: "#fff", height: 120, width: 120, marginVertical: 4, marginRight: 12, alignItems: 'center', justifyContent: 'center', }}>
+                        <Icon
+                            name="add"
+                            size={90}
+                            color="#999"
+                            onPress={() => setModalVisible(!modalvisible)}
+                        />
+                        <Text>Add New</Text>
+                    </View>
                 </ScrollView>
-            )}
+            </View>
+            <View>
+              {
+                 restaurant.map((item, index) => (
+                   console.log(item.foods)
+                ))
+              }  
+            </View>
             <Modal
                 visible={modalvisible}
                 onRequestClose={() => {
-                    !showAddRestaurant && setModalVisible(!modalvisible);
+                    setModalVisible(!modalvisible);
                 }}
             >
                 <AddRestaurant setModalVisible={setModalVisible} />
             </Modal>
-            <Modal
-                visible={editResModalVisible}
-                onRequestClose={() => {
-                    setEditResModalVisible(!editResModalVisible);
-                }}
-            >
-                <EditRestaurant setModalVisible={setEditResModalVisible} item={editRestaurant} />
-            </Modal>
+
         </View>
     )
 }
@@ -60,5 +64,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         padding: 8,
         justifyContent: 'center',
+    },
+    scrollViewContent: {
+        alignItems: 'center',
+        gap: 8
     },
 })

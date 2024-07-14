@@ -14,7 +14,7 @@ export default function Register({ navigation }) {
     
     //Register User in google firebase    
     const handelSubmit = async () => {      
-        
+     //et data={name,email,}   
     }
     return (
         
@@ -34,14 +34,7 @@ export default function Register({ navigation }) {
                     onChangeText={(text) => setEmail(text)}
                 />
               
-               
-                <TextInput
-                    style={globalStyle.inputBox}
-                    placeholder='Enter your phone no.'
-                    value={phone}
-                    onChangeText={(text) => setPhone(text)}
-                    keyboardType="phone-pad"
-                />
+              
                 <TextInput
                     style={globalStyle.inputBox}
                     placeholder='Enter your password'

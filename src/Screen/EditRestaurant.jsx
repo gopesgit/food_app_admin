@@ -13,17 +13,17 @@ const EditRestaurant = ({ setModalVisible,item }) => {
   const showAddRestaurant = !restaurant || restaurant.length === 0;
   console.log("DDD=>",item);
   //console.log("Rest", restaurant);
-  const [image, setImage] = useState(null);
-  const [logo, setLogo] = useState(null);
-  const [name, setName] = useState(null);
-  const [address, setAddress] = useState(null);
-  const [description, setDescription] = useState(null);
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
-  const [pincode, setPincode] = useState(null);
-  const [email, setEmail] = useState(null);
-  const [licenses, setLicenses] = useState(null);
-  const [branch, setBranch] = useState(null);
+  const [image, setImage] = useState(item.image_url);
+  const [logo, setLogo] = useState(item.logo_url);
+  const [name, setName] = useState(item.name);
+  const [address, setAddress] = useState(item.address);
+  const [description, setDescription] = useState(item.description);
+  const [latitude, setLatitude] = useState(item.latitude);
+  const [longitude, setLongitude] = useState(item.longitude);
+  const [pincode, setPincode] = useState(item.pincode);
+  const [email, setEmail] = useState(item.email);
+  const [licenses, setLicenses] = useState(item.licenses);
+  const [branch, setBranch] = useState(item.branch);
   const handelSubmit = async () => {
     let data = { name, address, description, latitude, longitude, pincode, email, licenses, branch }
     const requiredFields = ['name', 'address', 'description', 'latitude', 'longitude', 'pincode', 'email', 'licenses', 'branch'];
@@ -78,12 +78,7 @@ const EditRestaurant = ({ setModalVisible,item }) => {
           }
           </View>
 
-          <View style={{ marginHorizontal: 12 }}>
-            {!showAddRestaurant &&
-              <>
-                <Button title="Close " onPress={() => setModalVisible(false)} radius={'lg'} containerStyle={{ marginVertical: 8 }} />
-
-              </>}
+          <View style={{ marginHorizontal: 12 }}>           
             <View style={globalStyle.inputBoxImage}>
               <View style={{ position: 'relative' }}>
                 <Pressable onPress={() => pickImage(setImage)}>

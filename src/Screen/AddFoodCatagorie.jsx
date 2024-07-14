@@ -1,12 +1,13 @@
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Pressable, KeyboardAvoidingView, ScrollView, Image, ToastAndroid } from "react-native";
 import { globalStyle } from "../common/style";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Button, Icon } from "@rneui/base";
 import { pickImage, checkFormData, insertData } from "../common/someCommonFunction";
 import { API_FOOD_CATEGORIE } from "../common/apiURL";
+import { OperationContext } from "../context/operationContext";
 
 export default function AddFoodCatagorie({ navigation }) {
-
+    const {allFunction}=useContext(OperationContext);
     const [name, setName] = useState("")
     const [description, setDescription] = useState("")
     const [image, setImage] = useState(null);
@@ -30,6 +31,7 @@ export default function AddFoodCatagorie({ navigation }) {
         });
         try {
             await insertData(formdata, API_FOOD_CATEGORIE)
+            allFunction()
             setName("")
             setDescription("")
             setImage(null)

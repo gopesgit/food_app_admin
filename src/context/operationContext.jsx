@@ -3,8 +3,8 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { API_FOOD_CATEGORIE, API_RESTAURANT } from "../common/apiURL";
 import axios from "axios";
 import { AuthContext } from "./authContex";
-
-export const OperationContext = createContext("")
+import AddRestaurant from "../Screen/AddRestaurant";
+import AddFoodCatagorie from "../Screen/AddFoodCatagorie";
 const getData = async (API_URL) => {
     try {
         const response = await axios.get(API_URL);       
@@ -13,22 +13,24 @@ const getData = async (API_URL) => {
         console.log(error);        
     }
 }
-
+export const OperationContext = createContext("")
 export const OperationProvider = ({ children }) => {
     //define auth state
     const {user}=useContext(AuthContext);
     const [restaurant, setRestaurant] = useState()
     const [foodcategorie,setFoodCat]=useState()    
-    console.log(user);
+    //console.log(user);
     useEffect(() => {
+       allFunction()
+    }, [AddRestaurant,AddFoodCatagorie])
+    const allFunction=()=>{
         getRestaurantList()
         getFoodCateList()
-    }, [])
+    }
     const getRestaurantList = async () => {
         setRestaurant();
         //console.log("Operation=> ", await getData(API_RESTAURANT))        
         setRestaurant((await  getData(API_RESTAURANT)).filter((item)=>item.user_id===user.email))
-
     }
     const getFoodCateList = async () => {
         setFoodCat();
@@ -36,7 +38,8 @@ export const OperationProvider = ({ children }) => {
         setFoodCat(await  getData(API_FOOD_CATEGORIE))
     }
 
-    return (<OperationContext.Provider value={{ restaurant, setRestaurant,foodcategorie,setFoodCat }}>
+
+    return (<OperationContext.Provider value={{ restaurant, setRestaurant,foodcategorie,setFoodCat,allFunction }}>
         {children}
     </OperationContext.Provider>)
 
