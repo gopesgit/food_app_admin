@@ -4,11 +4,12 @@ import { tw } from 'react-native-tailwindcss';
 import { Button, Icon } from '@rneui/base';
 import EditRestaurant from '../Screen/EditRestaurant';
 import AddFoodItem from '../Screen/AddFoodItem';
+import { globalStyle } from '../common/style';
 const RestaurantRow = ({ item }) => {
     const [editResModalVisible, setEditResModalVisible] = useState(false);
     const [addfoodmodal, setAddFoodModal] = useState(false);
     return (
-        <View style={[tw.shadow, { shadowColor: "rgba(0, 0, 0, 0.5)", shadowRadius: 12, padding: 8, marginHorizontal: 'auto', borderRadius: 12, backgroundColor: "#fff", marginVertical: 4, alignItems: 'center' }]}>
+        <View style={[tw.shadow, globalStyle.adminCard]}>
 
             <View>
                 <Image
@@ -24,7 +25,7 @@ const RestaurantRow = ({ item }) => {
                 </View>
                 <View style={{ marginBottom: 4, position: 'absolute', marginTop: 70, marginLeft: 9 }}>
                     <Button radius={"sm"} size='sm' containerStyle={{ backgroundColor: "#fff" }}
-                    onPress={()=>setAddFoodModal(!addfoodmodal)}
+                        onPress={() => setAddFoodModal(!addfoodmodal)}
                     >
                         <Icon name="add" color="#fff" size={20} />
                         Add Food
@@ -38,7 +39,7 @@ const RestaurantRow = ({ item }) => {
                     setEditResModalVisible(!editResModalVisible);
                 }}
             >
-                 <EditRestaurant item={item} />
+                <EditRestaurant item={item} />
             </Modal>
             <Modal
                 visible={addfoodmodal}
@@ -46,7 +47,7 @@ const RestaurantRow = ({ item }) => {
                     setAddFoodModal(!addfoodmodal);
                 }}
             >
-           <AddFoodItem rest_id={item.id}/>
+                <AddFoodItem rest_id={item.id} setAddFoodModal={setAddFoodModal}/>
             </Modal>
         </View>
 

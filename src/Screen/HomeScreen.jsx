@@ -5,6 +5,7 @@ import AddRestaurant from './AddRestaurant';
 import RestaurantRow from '../componet/RestaurantRow';
 import { Button, Icon, Text } from '@rneui/base';
 import { tw } from 'react-native-tailwindcss';
+import FoodItemRoow from '../componet/FoodItemRoow';
 
 const HomeScreen = ({ navigation }) => {
     const { restaurant } = useContext(OperationContext);
@@ -36,13 +37,21 @@ const HomeScreen = ({ navigation }) => {
                     </View>
                 </ScrollView>
             </View>
-            <View>
-              {
-                 restaurant.map((item, index) => (
-                   console.log(item.foods)
-                ))
-              }  
-            </View>
+            <ScrollView
+            contentContainerStyle={{marginVertical:4}}
+            showsVerticalScrollIndicator={false}
+            >
+                {!showAddRestaurant && (
+                    restaurant.map((item, index) => (
+                        <View key={index} style={{paddingVertical:8}}>
+                            <Text>{item.name}</Text>
+                            <FoodItemRoow item={item.foods} />
+                        </View>
+                      
+                    ))
+                )
+                }
+            </ScrollView>
             <Modal
                 visible={modalvisible}
                 onRequestClose={() => {

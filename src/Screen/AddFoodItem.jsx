@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, ScrollView, StatusBar, StyleSheet, TextInput, View, Image, Text, Pressable, Alert, ToastAndroid } from 'react-native'
+import { KeyboardAvoidingView, ScrollView, StatusBar, StyleSheet, TextInput, View, Image, Text, Pressable, Alert, ToastAndroid, SafeAreaView } from 'react-native'
 import React, { useContext, useState } from 'react'
 import { globalStyle } from '../common/style'
 import { Button, Input, Icon, ListItem, Header } from '@rneui/base'
@@ -6,11 +6,12 @@ import { checkFormData, insertData, pickImage } from '../common/someCommonFuncti
 import { API_FOOD } from '../common/apiURL'
 import { OperationContext } from '../context/operationContext'
 import { Dropdown } from 'react-native-element-dropdown'
-const AddFoodItem = ({rest_id}) => {
+const AddFoodItem = ({rest_id,setAddFoodModal}) => {
   console.log(rest_id);
-  const { restaurant, foodcategorie } = useContext(OperationContext);
+  const { foodcategorie,allFunction } = useContext(OperationContext);
   // console.log("RES=>",restaurant);
   // console.log("FoodCAT=>",foodcategorie);
+  const [loading,setLoading]=useState(false);
   const [image, setImage] = useState(null);
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
@@ -41,10 +42,21 @@ const AddFoodItem = ({rest_id}) => {
       formdata.append(key, data[key]);
     });
     //console.log(formdata);
-    await insertData(formdata, API_FOOD)
+    try {
+      setLoading(true)
+      await insertData(formdata, API_FOOD)
+      setImage(null)
+      setLoading(false)
+      allFunction()
+      setAddFoodModal(false)
+      ToastAndroid.showWithGravity(`Data submit`, ToastAndroid.LONG, ToastAndroid.TOP)
+    } catch (error) {
+      ToastAndroid.showWithGravity(`Error`, ToastAndroid.LONG, ToastAndroid.TOP)
+    }
+   
   }
   return (
-    <View style={{ flex: 1, backgroundColor: "#fff" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <KeyboardAvoidingView>
         <ScrollView>
           <View style={{ marginHorizontal: 12 }}>
@@ -151,12 +163,17 @@ const AddFoodItem = ({rest_id}) => {
                 />
               </View>
             }
+             {loading?
+             <Button title="outline" type="solid" loading size='lg' />
+             :
             <Button title="Add Food " onPress={handelSubmit} />
+             }
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
       <StatusBar style='auto' />
-    </View>
+    </SafeAreaView>
+  
   )
 }
 

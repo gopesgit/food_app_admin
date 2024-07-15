@@ -115,6 +115,16 @@ export const globalStyle = StyleSheet.create({
     redfont:{
         fontSize:14,
         color:"#ff0000",
+    },
+    adminCard:{
+        shadowColor: "rgba(0, 0, 0, 0.5)", 
+        shadowRadius: 12, 
+        padding: 8, 
+        marginHorizontal: 'auto', 
+        borderRadius: 12, 
+        backgroundColor: "#fff", 
+        marginVertical: 4, 
+        alignItems: 'center' 
     }
 
 
