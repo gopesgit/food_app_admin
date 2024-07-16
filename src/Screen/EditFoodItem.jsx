@@ -6,25 +6,26 @@ import { checkFormData, insertData, pickImage } from '../common/someCommonFuncti
 import { API_FOOD } from '../common/apiURL'
 import { OperationContext } from '../context/operationContext'
 import { Dropdown } from 'react-native-element-dropdown'
-const AddFoodItem = ({rest_id,setAddFoodModal}) => {
-  console.log(rest_id);
+const EditFoodItem = ({item}) => {
+  console.log(item);
   const { foodcategorie,allFunction } = useContext(OperationContext);
   // console.log("RES=>",restaurant);
   // console.log("FoodCAT=>",foodcategorie);
   const [loading,setLoading]=useState(false);
-  const [image, setImage] = useState(null);
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
-  const [description, setDescription] = useState("");
-  const [ingredients, setIngredients] = useState("");
+  const [image, setImage] = useState(item.food_image_url);
+  const [name, setName] = useState(item.name);
+  const [price, setPrice] = useState(String(item.price || ''));
+  const [description, setDescription] = useState(item.description);
+  const [ingredients, setIngredients] = useState(item.ingredients);
   const [package_items_count, setPackageItemsCount] = useState("");
   const [weight, setWeight] = useState("");
   const [unit, setUnit] = useState("");
   const [featured, setFeatured] = useState("");
   const [deliverable, setDeliverable] = useState("");
-  const [restaurant_id, setRestaurant] = useState(rest_id);
+  const [restaurant_id, setRestaurant] = useState(item.restaurant_id);
   const [category_id, setFoodCategorie] = useState("");
   const [discount_price, setDiscountPrice] = useState("");
+  //console.log(price);
   const handelSubmit = async () => {
     let data = { name, price, description, ingredients, package_items_count, weight, unit, featured, deliverable, restaurant_id, category_id, discount_price }
     const requiredFields = ['name', 'price', 'description', 'restaurant_id', 'category_id'];
@@ -177,7 +178,7 @@ const AddFoodItem = ({rest_id,setAddFoodModal}) => {
   )
 }
 
-export default AddFoodItem
+export default EditFoodItem
 
 const styles = StyleSheet.create({
   image: {

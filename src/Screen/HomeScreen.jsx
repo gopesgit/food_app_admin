@@ -1,4 +1,4 @@
-import { Modal, ScrollView, StyleSheet, View } from 'react-native'
+import { FlatList, Modal, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { OperationContext } from '../context/operationContext'
 import AddRestaurant from './AddRestaurant';
@@ -37,21 +37,49 @@ const HomeScreen = ({ navigation }) => {
                     </View>
                 </ScrollView>
             </View>
-            <ScrollView
+            {/* <ScrollView
             contentContainerStyle={{marginVertical:4}}
             showsVerticalScrollIndicator={false}
             >
+              
                 {!showAddRestaurant && (
                     restaurant.map((item, index) => (
+                      
                         <View key={index} style={{paddingVertical:8}}>
                             <Text>{item.name}</Text>
                             <FoodItemRoow item={item.foods} />
                         </View>
+                       
                       
                     ))
                 )
                 }
-            </ScrollView>
+           
+            </ScrollView> */}
+            {/* {!showAddRestaurant && (
+                restaurant.map((item, index) => (
+                    <View>
+                        <Text>{item.name}</Text>
+                        <FlatList
+                            data={item.foods}
+                            renderItem={FoodItemRoow}
+                            keyExtractor={(item, index) => index.toString()} // Use index as key if items don't have unique IDs
+                            contentContainerStyle={{ marginVertical: 4 }}
+                            showsVerticalScrollIndicator={false}
+                            numColumns={3}
+                        />
+                    </View>
+                ))
+
+            )} */}
+            <FlatList
+                data={restaurant}
+                renderItem={FoodItemRoow}
+                keyExtractor={(item, index) => index.toString()} // Use index as key if items don't have unique IDs
+                contentContainerStyle={{ marginVertical: 4 }}
+                showsVerticalScrollIndicator={false}
+                //contentContainerStyle={{ backgroundColor: "#ddd",}}
+            />
             <Modal
                 visible={modalvisible}
                 onRequestClose={() => {

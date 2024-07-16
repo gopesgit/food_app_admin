@@ -46,6 +46,18 @@ export const insertData = async (formdata, APIURL) => {
     ToastAndroid.showWithGravity('Data not add', ToastAndroid.LONG, ToastAndroid.TOP)
   }
 }
+export const deleteData = async (id, APIURL) => {
+  console.log(APIURL);
+  console.log(id);
+  try {
+    let response = await axios.delete(`${APIURL}/${id}`);
+    console.log('Upload successful! ', response);
+    ToastAndroid.showWithGravity('Delete Data', ToastAndroid.LONG, ToastAndroid.TOP)
+  } catch (error) {
+    console.error('Upload failed! ', error);
+    ToastAndroid.showWithGravity('Data not add', ToastAndroid.LONG, ToastAndroid.TOP)
+  }
+}
 export const pickImage = async (data) => {
   //console.log(data);
   // No permissions request is necessary for launching the image library
