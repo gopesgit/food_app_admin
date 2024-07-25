@@ -7,11 +7,12 @@ import { API_RESTAURANT } from '../common/apiURL';
 import { OperationContext } from '../context/operationContext';
 import { AuthContext } from '../context/authContex';
 import Header from '../componet/Header';
-const EditRestaurant = ({ setModalVisible,item }) => {
+const EditRestaurant = ({ route }) => {
   const { restaurant } = useContext(OperationContext);
   const { user } = useContext(AuthContext);
+  const { item } = route.params;
   const showAddRestaurant = !restaurant || restaurant.length === 0;
-  console.log("DDD=>",item);
+  //console.log("DDD=>",item);
   //console.log("Rest", restaurant);
   const [image, setImage] = useState(item.image_url);
   const [logo, setLogo] = useState(item.logo_url);
@@ -47,7 +48,7 @@ const EditRestaurant = ({ setModalVisible,item }) => {
     Object.keys(data).forEach(key => {
       formdata.append(key, data[key]);
     });
-
+    console.log(formdata);
     try {
       await insertData(formdata, API_RESTAURANT)
       setName('')

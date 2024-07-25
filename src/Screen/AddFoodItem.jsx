@@ -6,7 +6,9 @@ import { checkFormData, insertData, pickImage } from '../common/someCommonFuncti
 import { API_FOOD } from '../common/apiURL'
 import { OperationContext } from '../context/operationContext'
 import { Dropdown } from 'react-native-element-dropdown'
-const AddFoodItem = ({rest_id,setAddFoodModal}) => {
+const AddFoodItem = ({route}) => {
+  //const 
+  const { rest_id } = route.params;
   console.log(rest_id);
   const { foodcategorie,allFunction } = useContext(OperationContext);
   // console.log("RES=>",restaurant);

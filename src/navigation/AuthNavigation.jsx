@@ -5,7 +5,6 @@ import { useContext } from 'react';
 import { AuthContext } from '../context/authContex';
 import HomeNavigation from './HomeNavigation';
 const AuthStack = createStackNavigator();
-
 const AuthNavigation = () => {
   const { user } = useContext(AuthContext)
   //console.log("Auth",user);

@@ -71,3 +71,16 @@ export const pickImage = async (data) => {
     data(result.assets[0].uri);
   }
 };
+export const getData = async (API_URL) => {
+  try {
+    const response = await axios.get(API_URL);
+    if (response.status === 200) {
+      return response.data; // Return the data if request is successful
+    } else {
+      return null; // Return null if request is not successful
+    }
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    //throw error; // Re-throw the error to handle it outside of this function if needed
+  }
+};

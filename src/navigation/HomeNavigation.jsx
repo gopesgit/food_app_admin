@@ -7,6 +7,7 @@ import HomeScreen from '../Screen/HomeScreen'
 import AddFoodItem from '../Screen/AddFoodItem'
 import { OperationProvider } from '../context/operationContext'
 import AddFoodCatagorie from '../Screen/AddFoodCatagorie'
+import HomeStackNavigation from './HomeStackNavigation'
 const TabNavi = createBottomTabNavigator()
 const HomeNavigation = () => {
   return (
@@ -26,7 +27,7 @@ const HomeNavigation = () => {
             headerShown: true,
           }}
 
-          component={HomeScreen}
+          component={HomeStackNavigation}
         />
         <TabNavi.Screen
           options={{
@@ -40,17 +41,7 @@ const HomeNavigation = () => {
           component={AddFoodCatagorie}
         />
 
-        <TabNavi.Screen
-          options={{
-            title: "Fund",
-            headerShown: true,
-            tabBarIcon: ({ color, size }) => (
-              <Icon name="currency-rupee" size={size} color={color} />
-            ),
-          }}
-          name="Add Fund Type"
-          component={AddFoodItem}
-        />
+        
       </TabNavi.Navigator>
     </OperationProvider>
   )

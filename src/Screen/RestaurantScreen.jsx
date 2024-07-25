@@ -1,37 +1,20 @@
-import React, { useCallback, useContext, useState } from 'react';
-import { StyleSheet, View, TouchableOpacity, TextInput, Text, FlatList, RefreshControl } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { StyleSheet, View, TouchableOpacity, TextInput, Text, FlatList } from 'react-native';
 import { OperationContext } from '../context/operationContext';
 import AddRestaurant from './AddRestaurant';
 import RestaurantRow from '../componet/RestaurantRow';
 import FoodItemRoow from '../componet/FoodItemRoow';
-import { Icon } from '@rneui/base';
-import { useFocusEffect } from '@react-navigation/native';
+import { Icon, Card, Button } from '@rneui/base';
 
-const HomeScreen = ({ navigation }) => {
-  const { restaurant,getRestaurantList } = useContext(OperationContext);
-  const [refreshing, setRefreshing] = useState(false);
+const RestaurantScreen = ({ route }) => {
+  //const { restaurant } = useContext(OperationContext);
   //console.log(restaurant);
-  const showAddRestaurant = !restaurant || restaurant.length === 0;
+  //const showAddRestaurant = !restaurant || restaurant.length === 0;
   //console.log(restaurant.length);
-  const [modalVisible, setModalVisible] = useState(false);
-  
-  const onRefresh = useCallback(async () => {
-    setRefreshing(true);
-    try {
-      await getRestaurantList(); // Function to fetch restaurants
-    } catch (error) {
-      console.error('Error refreshing restaurants:', error);
-    }
-    setRefreshing(false);
-  }, []);
-  
-  useFocusEffect(
-    useCallback(() => {
-      // Trigger refresh when screen gains focus
-      onRefresh();
-    }, [onRefresh])
-  );
-
+  //const [modalVisible, setModalVisible] = useState(false);
+  const { item } = route.params;
+  const foodItem = item.foods
+  console.log("OK=====", foodItem.length);
   return (
     <View style={styles.container}>
       <View style={styles.searchContainer}>
@@ -43,36 +26,41 @@ const HomeScreen = ({ navigation }) => {
         />
         <Icon name="mic" type="material" size={24} color="#888" />
       </View>
-      <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate('Add-Restaurant')}>
-     
-     <Text style={styles.actionButtonText}>Add New</Text>
-   </TouchableOpacity>
+
+
+      <Card containerStyle={{marginTop:4,}}>
+        <Card.Title>{item.name}</Card.Title>
+        <Card.Divider />
+        <Card.Image
+          style={{ padding: 0 }}
+          source={{ uri: item.image_url }}
+        />
+
+        <Text style={{ color: "#000" }}>{item.address}</Text>
+        <Text style={{ color: "#000" }}>{item.pincode}</Text>
+        <Text style={{ color: "#000" }}>{item.licenses}</Text>
+        <Card.FeaturedSubtitle>
+          <Text style={{ marginBottom: 10, color: "#444" }}>
+            {item.description}
+          </Text>
+        </Card.FeaturedSubtitle>
+
+        
+      </Card>
       <FlatList
-        data={restaurant}
-        renderItem={({ item }) => <RestaurantRow item={item} />}
+        data={foodItem}
+        renderItem={({ item }) => <FoodItemRoow item={item} />}
         keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={styles.scrollViewContent}
+        contentContainerStyle={{marginTop:8}}
         showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-          />
-        }
       />
 
 
-      {/* <FlatList
-      data={formattedOrders}
-      renderItem={renderOrder}
-      keyExtractor={(item) => item.id}
-      contentContainerStyle={styles.orderList}
-    /> */}
     </View>
   );
 };
 
-export default HomeScreen;
+export default RestaurantScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -99,9 +87,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
     padding: 10,
-    marginHorizontal:15,
-    marginTop:15,
-    marginBottom:5,
+    marginHorizontal: 15,
+    marginTop: 5,    
     borderRadius: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -213,13 +200,13 @@ const styles = StyleSheet.create({
   },
   editButton: {
     flexDirection: 'row',
-    marginBottom:5,
+    marginBottom: 5,
     alignItems: 'center',
     backgroundColor: '#007AFF', // Background color for the button
     borderRadius: 5, // Rounded corners
     paddingHorizontal: 15, // Horizontal padding inside the button
     paddingVertical: 10, // Vertical padding inside the button
-   
+
     alignSelf: 'center', // Align button to center horizontally
   },
   actionButtonText: {
