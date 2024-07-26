@@ -17,7 +17,7 @@ const RestaurantRow = ({ item }) => {
     try {
       const orderList = await fetchOrderList(item.id);
       //console.log("hh", orderList.filter((item)=>item.status_restaurant==='pending')); // Logging the fetched order list
-      setPendingOrders(orderList.filter((item)=>item.status_restaurant!=='delivery'))
+      setPendingOrders(orderList.filter((item)=>item.status_restaurant!=='cancel'))
     } catch (error) {
       console.error('Error fetching order list:', error);
     }

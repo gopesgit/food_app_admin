@@ -49,8 +49,8 @@ export const OperationProvider = ({ children }) => {
         try {        
           const orderlistPending = await getData(API_ORDER_LIST +id);          
           if (orderlistPending && orderlistPending.length > 0) {
-            //console.log('Order List Pending:', orderlistPending);
-            return orderlistPending; // Return the fetched data
+            //console.log("From:",orderlistPending);            
+            return orderlistPending.filter((item)=>item.status_restaurant!=='cancel'&&item.status_restaurant!=='delivery'); // Return the fetched data
           } else {
             console.log('Order list is empty or undefined');
             return []; // Return an empty array if the list is empty or undefined

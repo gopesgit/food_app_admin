@@ -13,10 +13,8 @@ const OrderScreen = ({ route }) => {
   //console.log(oitem[0].restaurant_id);
   // Callback for refreshing data
   const onRefresh = useCallback(async () => {
-    setRefreshing(true);
-   
-    try {
-        
+    setRefreshing(true);   
+    try {        
       const updatedItems = await fetchOrderList(oitem[0].restaurant_id);
       setItems(updatedItems);
     } catch (error) {

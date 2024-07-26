@@ -47,7 +47,7 @@ const OrderItemRoow = ({ item }) => {
       };
     return (
         <View >
-            {item.status_restaurant!=='delivery'?
+           
             <Card>
                 <Card.Title>{ moment(item.updatedAt).format('MMMM Do YYYY, h:mm:ss a')},{item.status_restaurant}</Card.Title>
 
@@ -88,7 +88,7 @@ const OrderItemRoow = ({ item }) => {
                 </View>
             
             </Card>
-:null}
+
             {/* <View style={styles.orderHeader}>
                 {item.orders.map(item => (
                     <View key={item.id} >
