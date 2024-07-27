@@ -6,6 +6,7 @@ import * as ImagePicker from 'expo-image-picker';
 
 export const login = async (data, setUser) => {
   try {
+    console.log(data);
     const response = await axios.get(API_USER, { params: data });
     console.log('Response:', response.data);
     await AsyncStorage.setItem('auth', JSON.stringify(response.data))
@@ -26,7 +27,7 @@ export const checkFormData=(data,requiredFields)=>{
 }
 return true;
 }
-export const insertData = async (formdata, APIURL) => {
+export const insertData = async (formdata, APIURL,message) => {
   console.log(APIURL);
   console.log(formdata);
   try {
@@ -39,11 +40,12 @@ export const insertData = async (formdata, APIURL) => {
         },
       }
     );
-    console.log('Upload successful! ', response);
-    ToastAndroid.showWithGravity('Add Data', ToastAndroid.LONG, ToastAndroid.TOP)
+    //console.log('Upload successful! ', response);
+    ToastAndroid.showWithGravity(message, ToastAndroid.LONG, ToastAndroid.TOP)
+    return response
   } catch (error) {
-    console.error('Upload failed! ', error);
-    ToastAndroid.showWithGravity('Data not add', ToastAndroid.LONG, ToastAndroid.TOP)
+    console.error('Something worng! ', error);
+    ToastAndroid.showWithGravity('Something worng! ', ToastAndroid.LONG, ToastAndroid.TOP)
   }
 }
 export const deleteData = async (id, APIURL) => {

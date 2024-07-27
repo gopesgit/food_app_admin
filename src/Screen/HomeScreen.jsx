@@ -43,9 +43,9 @@ const HomeScreen = ({ navigation }) => {
         />
         <Icon name="mic" type="material" size={24} color="#888" />
       </View>
-      <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate('Add-Restaurant')}>
+      <TouchableOpacity style={[styles.editButton,{justifyContent:'center'}]} onPress={() => navigation.navigate('Add-Restaurant')}>
      
-     <Text style={styles.actionButtonText}>Add New</Text>
+     <Text style={[styles.actionButtonText,{alignSelf:'center'}]}>Add New</Text>
    </TouchableOpacity>
       <FlatList
         data={restaurant}
@@ -80,34 +80,20 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f7f7f7',
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 15,
-    paddingHorizontal: 15,
-  },
-  backIcon: {
-    marginRight: 10,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
-  },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#fff',
     padding: 10,
-    marginHorizontal:15,
-    marginTop:15,
-    marginBottom:5,
-    borderRadius: 5,
+    marginHorizontal: 15,
+    marginTop: 15,
+    marginBottom: 5,
+    borderRadius: 10, // Rounded corners for a modern look
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 5,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 6,
   },
   searchInput: {
     flex: 1,
@@ -116,115 +102,25 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
   },
-  orderList: {
-    paddingBottom: 20,
-  },
-  orderCard: {
-    backgroundColor: '#fff',
-    padding: 15,
-    marginHorizontal: 15,
-    marginBottom: 10,
-    borderRadius: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 5,
-  },
-  orderHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  restaurantImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    marginRight: 10,
-  },
-  orderInfo: {
-    flex: 1,
-  },
-  restaurantName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  location: {
-    fontSize: 14,
-    color: '#666',
-  },
-  menuLink: {
-    fontSize: 14,
-    color: '#007AFF',
-    marginTop: 5,
-  },
-  orderDetails: {
-    fontSize: 14,
-    color: '#333',
-    marginBottom: 5,
-  },
-  orderTime: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 5,
-  },
-  status: {
-    fontSize: 14,
-    color: '#333',
-    marginBottom: 5,
-  },
-  amount: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 10,
-  },
-  paymentFailed: {
-    fontSize: 14,
-    color: '#FF3B30',
-    marginBottom: 5,
-  },
-  paymentFailedDetails: {
-    fontSize: 12,
-    color: '#666',
-    marginBottom: 10,
-  },
-  orderFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  rating: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  ratingText: {
-    fontSize: 14,
-    color: '#333',
-    marginRight: 10,
-  },
-  paymentStatus: {
-    fontSize: 12,
-    color: '#666',
-    backgroundColor: '#eee',
-    padding: 5,
-    borderRadius: 5,
-  },
   editButton: {
     flexDirection: 'row',
-    marginBottom:5,
     alignItems: 'center',
-    backgroundColor: '#007AFF', // Background color for the button
-    borderRadius: 5, // Rounded corners
-    paddingHorizontal: 15, // Horizontal padding inside the button
-    paddingVertical: 10, // Vertical padding inside the button
-   
-    alignSelf: 'center', // Align button to center horizontally
+    backgroundColor: '#007AFF', // Primary color
+    borderRadius:12 , // Larger radius for pill shape
+    paddingVertical: 12, // Adjusted for better visual appeal
+    paddingHorizontal: 20, // Increased horizontal padding
+    marginHorizontal: 15, // Added margin for better spacing
+    marginBottom: 15, // Increased bottom margin for better separation
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 8,
   },
   actionButtonText: {
     color: '#fff', // Text color
-    fontSize: 16, // Text size
-    marginLeft: 5, // Space between icon and text, adjust as needed
+    fontSize: 18, // Larger font size for better readability
+    fontWeight: 'bold', // Bold text for emphasis
+    marginLeft: 10, // Space between icon and text
   },
 });
