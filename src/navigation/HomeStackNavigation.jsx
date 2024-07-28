@@ -6,6 +6,7 @@ import AddFoodItem from '../Screen/AddFoodItem';
 import RestaurantScreen from '../Screen/RestaurantScreen';
 import EditFoodItem from '../Screen/EditFoodItem';
 import OrderScreen from '../Screen/OrderScreen';
+import DeliveryFeeScreen from '../Screen/DeliveryFeeScreen';
 const HomeStack = createStackNavigator();
 const HomeStackNavigation = () => {
     return (
@@ -37,6 +38,10 @@ const HomeStackNavigation = () => {
              <HomeStack.Screen
                 name="Order-List"
                 component={OrderScreen}
+            />
+            <HomeStack.Screen
+                name="DeliveryFeeScreen"
+                component={DeliveryFeeScreen}
             />
 
         </HomeStack.Navigator>

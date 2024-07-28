@@ -116,7 +116,7 @@ const RestaurantRow = ({ item, onRefresh }) => {
           <Icon name={item.available_for_delivery ? "check-circle" : "cancel"} color="#fff" size={18} />
           <Text style={styles.actionButtonText}>{item.available_for_delivery ? "Available for Delivery" : "Not Available for Delivery"}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonOrder} onPress={() => navigation.navigate("Order", { rest_id: item.id })}>
+        <TouchableOpacity style={styles.buttonOrder} onPress={() =>console.log("ok")}>
           <Icon name="add" color="#fff" size={18} />
           <Text style={styles.actionButtonText}>Delivery Fees</Text>
         </TouchableOpacity>
