@@ -1,20 +1,13 @@
 import React, { useCallback, useContext, useState } from 'react';
 import { StyleSheet, View, TouchableOpacity, TextInput, Text, FlatList, RefreshControl } from 'react-native';
 import { OperationContext } from '../context/operationContext';
-import AddRestaurant from './AddRestaurant';
 import RestaurantRow from '../componet/RestaurantRow';
-import FoodItemRoow from '../componet/FoodItemRoow';
 import { Icon } from '@rneui/base';
 import { useFocusEffect } from '@react-navigation/native';
 
 const HomeScreen = ({ navigation }) => {
   const { restaurant,getRestaurantList } = useContext(OperationContext);
   const [refreshing, setRefreshing] = useState(false);
-  //console.log(restaurant);
-  const showAddRestaurant = !restaurant || restaurant.length === 0;
-  //console.log(restaurant.length);
-  const [modalVisible, setModalVisible] = useState(false);
-  
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
@@ -49,7 +42,7 @@ const HomeScreen = ({ navigation }) => {
    </TouchableOpacity>
       <FlatList
         data={restaurant}
-        renderItem={({ item }) => <RestaurantRow item={item} />}
+        renderItem={({ item }) => <RestaurantRow item={item} onRefresh={onRefresh} />}
         keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
@@ -59,15 +52,7 @@ const HomeScreen = ({ navigation }) => {
             onRefresh={onRefresh}
           />
         }
-      />
-
-
-      {/* <FlatList
-      data={formattedOrders}
-      renderItem={renderOrder}
-      keyExtractor={(item) => item.id}
-      contentContainerStyle={styles.orderList}
-    /> */}
+      />      
     </View>
   );
 };

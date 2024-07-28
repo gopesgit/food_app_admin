@@ -1,16 +1,16 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext, useContext, useEffect, useState } from "react";
-import { API_FOOD_CATEGORIE, API_ORDER, API_ORDER_LIST, API_RESTAURANT } from "../common/apiURL";
+import { API_FOOD_CATEGORIE, API_ORDER, API_ORDER_LIST, API_RESTAURANT, API_RESTAURANT_OWNER } from "../common/apiURL";
 import axios from "axios";
 import { AuthContext } from "./authContex";
-import AddRestaurant from "../Screen/AddRestaurant";
-import AddFoodCatagorie from "../Screen/AddFoodCatagorie";
+
 const getData = async (API_URL) => {
     try {
         const response = await axios.get(API_URL);       
         return response.data
     } catch (error) {
-        console.log(error);        
+      
+        //console.log(error);        
     }
 }
 export const OperationContext = createContext("")
@@ -23,7 +23,7 @@ export const OperationProvider = ({ children }) => {
     //console.log(user);
     useEffect(() => {
        allFunction()
-    }, [AddRestaurant,AddFoodCatagorie])
+    }, [])
     const allFunction=()=>{
         getRestaurantList()
         getFoodCateList()
@@ -31,8 +31,9 @@ export const OperationProvider = ({ children }) => {
     }
     const getRestaurantList = async () => {
         setRestaurant([]);
-        //console.log("Operation=> ", await getData(API_RESTAURANT))        
-        setRestaurant((await  getData(API_RESTAURANT)).filter((item)=>item.user_id===user.email))
+        //console.log("Operation=> ",await getData(API_RESTAURANT_OWNER+user.email))             
+        setRestaurant((await  getData(API_RESTAURANT_OWNER+user.email)).filter((item)=>item.user_id===user.email))
+        return (await  getData(API_RESTAURANT_OWNER+user.email)).filter((item)=>item.user_id===user.email)
     }
     const getFoodCateList = async () => {
         setFoodCat([]);
@@ -52,6 +53,7 @@ export const OperationProvider = ({ children }) => {
             //console.log("From:",orderlistPending);            
             return orderlistPending.filter((item)=>item.status_restaurant!=='cancel'&&item.status_restaurant!=='delivery'); // Return the fetched data
           } else {
+            return []; 
             console.log('Order list is empty or undefined');
             return []; // Return an empty array if the list is empty or undefined
           }

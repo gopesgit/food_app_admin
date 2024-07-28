@@ -1,20 +1,49 @@
 import React, { useContext, useState } from 'react';
-import { StyleSheet, View, TouchableOpacity, TextInput, Text, FlatList } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, TextInput, Text, FlatList, RefreshControl } from 'react-native';
 import { OperationContext } from '../context/operationContext';
 import AddRestaurant from './AddRestaurant';
 import RestaurantRow from '../componet/RestaurantRow';
 import FoodItemRoow from '../componet/FoodItemRoow';
 import { Icon, Card, Button } from '@rneui/base';
+import { useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 
 const RestaurantScreen = ({ route }) => {
-  //const { restaurant } = useContext(OperationContext);
+  const { restaurant,getRestaurantList } = useContext(OperationContext);
+  const [refreshing, setRefreshing] = useState(false);
   //console.log(restaurant);
   //const showAddRestaurant = !restaurant || restaurant.length === 0;
   //console.log(restaurant.length);
   //const [modalVisible, setModalVisible] = useState(false);
+  
   const { item } = route.params;
-  const foodItem = item.foods
-  console.log("OK=====", foodItem.length);
+  console.log(item.id);  
+  const [restid,setRestID]=useState(item.id)
+  const [foodItem,setFoodItem] =useState( item.foods.filter((item)=>item.active==1))
+  const onRefresh = useCallback(async () => {
+    //const foodItem = item.foods.filter((item)=>item.active===1)
+    let updateres=await getRestaurantList()
+    console.log(updateres.filter((fitem)=>fitem.id===item.id)[0].foods);
+    //console.log("Res=>",(restaurant.filter((fitem)=>fitem.id===item.id))[0].foods.filter((item)=>!item.active));
+   
+    let foods=updateres.filter((fitem)=>fitem.id===item.id)[0].foods
+    console.log(foods.filter((item)=>item.active==1));
+    setFoodItem(foods.filter((item)=>item.active==1))
+    setRefreshing(true);
+    try {
+      await getRestaurantList(); // Function to fetch restaurants
+    } catch (error) {
+      console.error('Error refreshing restaurants:', error);
+    }
+    setRefreshing(false);
+  }, []);
+  
+  useFocusEffect(
+    useCallback(() => {
+      // Trigger refresh when screen gains focus
+      onRefresh();
+    }, [onRefresh])
+  );
   return (
     <View style={styles.container}>
       <View style={styles.searchContainer}>
@@ -25,34 +54,19 @@ const RestaurantScreen = ({ route }) => {
           placeholderTextColor="#888"
         />
         <Icon name="mic" type="material" size={24} color="#888" />
-      </View>
-
-
-      <Card containerStyle={{marginTop:4,}}>
-        <Card.Title>{item.name}</Card.Title>
-        <Card.Divider />
-        <Card.Image
-          style={{ padding: 0 }}
-          source={{ uri: item.image_url }}
-        />
-
-        <Text style={{ color: "#000" }}>{item.address}</Text>
-        <Text style={{ color: "#000" }}>{item.pincode}</Text>
-        <Text style={{ color: "#000" }}>{item.licenses}</Text>
-        <Card.FeaturedSubtitle>
-          <Text style={{ marginBottom: 10, color: "#444" }}>
-            {item.description}
-          </Text>
-        </Card.FeaturedSubtitle>
-
-        
-      </Card>
+      </View>      
       <FlatList
         data={foodItem}
-        renderItem={({ item }) => <FoodItemRoow item={item} />}
+        renderItem={({ item }) => <FoodItemRoow item={item} onRefresh={onRefresh} />}
         keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={{marginTop:8}}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
       />
 
 

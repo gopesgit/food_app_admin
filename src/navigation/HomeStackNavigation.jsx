@@ -1,9 +1,4 @@
 import { createStackNavigator } from '@react-navigation/stack'
-import Login from '../Screen/Login';
-import Register from '../Screen/Register';
-import { useContext } from 'react';
-import { AuthContext } from '../context/authContex';
-import HomeNavigation from './HomeNavigation';
 import HomeScreen from '../Screen/HomeScreen';
 import AddRestaurant from '../Screen/AddRestaurant';
 import EditRestaurant from '../Screen/EditRestaurant';
@@ -15,7 +10,6 @@ const HomeStack = createStackNavigator();
 const HomeStackNavigation = () => {
     return (
         <HomeStack.Navigator screenOptions={{ headerShown: false }}>
-
             <HomeStack.Screen
                 name="HomeScreen"
                 component={HomeScreen}

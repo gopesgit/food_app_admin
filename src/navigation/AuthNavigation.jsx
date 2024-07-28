@@ -4,6 +4,7 @@ import Register from '../Screen/Register';
 import { useContext } from 'react';
 import { AuthContext } from '../context/authContex';
 import HomeNavigation from './HomeNavigation';
+import HomeStackNavigation from './HomeStackNavigation';
 const AuthStack = createStackNavigator();
 const AuthNavigation = () => {
   const { user } = useContext(AuthContext)
@@ -12,11 +13,10 @@ const AuthNavigation = () => {
   console.log("logininfo", login);
   return (
     <AuthStack.Navigator screenOptions={{ headerShown: false }}>
-      {login ?
-      
+      {login ?      
         <AuthStack.Screen
           name="HomeNavigation"
-          component={HomeNavigation}
+         component={HomeNavigation}
         />
         :
         <>

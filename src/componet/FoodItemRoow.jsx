@@ -1,176 +1,161 @@
-import React, { useState } from 'react';
-import { Image, Modal, StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native';
-import { Button, Icon } from '@rneui/base';
-import EditRestaurant from '../Screen/EditRestaurant';
-import AddFoodItem from '../Screen/AddFoodItem';
+import React from 'react';
+import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { Icon } from '@rneui/base';
 import { useNavigation } from '@react-navigation/native';
-const FoodItemRoow = ({ item }) => {
-  const navigation=useNavigation();
-  
+import { API_FOOD } from '../common/apiURL';
+import { updateData } from '../common/someCommonFunction';
+
+const FoodItemRow = ({ item, onRefresh }) => {
+  const navigation = useNavigation();
+
+  const handleDelete = async (id) => {
+    const formData = new FormData();
+    formData.append('_method', 'put');
+    formData.append('active', 0);
+
+    try {
+      await updateData(formData, `${API_FOOD}/${id}`, "Food Item Update");
+      onRefresh();
+    } catch (error) {
+      console.error("Error updating food item:", error);
+    }
+  };
+
+  const handleDeliverable = async (id) => {
+    const formData = new FormData();
+    formData.append('_method', 'put');
+    formData.append('deliverable', item.deliverable ? 0 : 1);
+
+    try {
+      await updateData(formData, `${API_FOOD}/${id}`, "Food Item Update");
+      onRefresh();
+    } catch (error) {
+      console.error("Error updating deliverable status:", error);
+    }
+  };
+
   return (
-    <View style={styles.orderCard}>
-      <View style={styles.orderHeader}>
-        <Image source={{ uri: item.food_image_url }} style={styles.restaurantImage} />
-        <View style={styles.orderInfo}>
-          <Text style={styles.restaurantName}>{item.name}</Text>
-          <Text style={styles.location}>Rs. {item.price}</Text>
-          <TouchableOpacity>
-            <Text style={styles.menuLink}>{item.menuLink}</Text>
-          </TouchableOpacity>
+    <View style={styles.card}>
+      <View style={styles.header}>
+        <Image source={{ uri: item.food_image_url }} style={styles.image} />
+        <View style={styles.info}>
+          <Text style={styles.name}>{item.name}</Text>
+          <Text style={styles.price}>Rs. {item.price}</Text>
+          {item.menuLink ? (
+            <TouchableOpacity>
+              <Text style={styles.menuLink}>{item.menuLink}</Text>
+            </TouchableOpacity>
+          ) : null}
         </View>
-        <Icon name="dots-vertical" type="material-community" size={24} color="#333"  />
+        <Icon name="dots-vertical" type="material-community" size={24} color="#333" />
       </View>
-      
-      <View style={styles.orderFooter}>
-      <TouchableOpacity style={styles.editButton} onPress={() =>  navigation.navigate('Edit-Food', { item: item })}>
-          <Icon name="edit" color="#fff" size={20} />
-          <Text style={styles.actionButtonText}>Edit</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate("Add-Food")}>
-          <Icon name="add" color="#fff" size={20} />
-          <Text style={styles.actionButtonText}>Delete</Text>
+
+      <View style={styles.footer}>
+        <TouchableOpacity
+          style={styles.editButton}
+          onPress={() => navigation.navigate('Edit-Food', { item })}
+        >
+          <Icon name="edit" color="#fff" size={16} />
+          <Text style={styles.buttonText}>Edit</Text>
         </TouchableOpacity>
 
+        <TouchableOpacity
+          style={styles.deleteButton}
+          onPress={() => handleDelete(item.id)}
+        >
+          <Icon name="delete" color="#fff" size={16} />
+          <Text style={styles.buttonText}>Delete</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.toggleButton, { backgroundColor: item.deliverable ? "#28a745" : "#6c757d" }]}
+          onPress={() => handleDeliverable(item.id)}
+        >
+          <Icon name="check-circle" color="#fff" size={16} />
+          <Text style={styles.buttonText}>
+            {item.deliverable ? "Online" : "Offline"}
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    paddingVertical: 0,
-    flex: 1,
-    backgroundColor: '#f7f7f7',
+  card: {
+    backgroundColor: '#fff',
+    padding: 10,  // Reduced padding
+    marginHorizontal: 10, // Reduced margin
+    marginBottom: 10,
+    borderRadius: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 5,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 15,
-    paddingHorizontal: 15,
+    marginBottom: 10,
   },
-  backIcon: {
+  image: {
+    width: 40, // Reduced width
+    height: 40, // Reduced height
+    borderRadius: 20, // Reduced borderRadius
     marginRight: 10,
   },
-  title: {
-    fontSize: 20,
+  info: {
+    flex: 1,
+  },
+  name: {
+    fontSize: 14, // Reduced fontSize
     fontWeight: 'bold',
     color: '#333',
   },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    padding: 10,
-    margin: 15,
-    borderRadius: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 5,
-  },
-  searchInput: {
-    flex: 1,
-    marginLeft: 10,
-    marginRight: 10,
-    fontSize: 16,
-    color: '#333',
-  },
-  orderList: {
-    paddingBottom: 20,
-  },
-  orderCard: {
-    backgroundColor: '#fff',
-    padding: 15,
-    marginHorizontal: 15,
-    marginBottom: 10,
-    borderRadius: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 5,
-  },
-  orderHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  restaurantImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    marginRight: 10,
-  },
-  orderInfo: {
-    flex: 1,
-  },
-  restaurantName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  location: {
-    fontSize: 14,
+  price: {
+    fontSize: 12, // Reduced fontSize
     color: '#666',
   },
   menuLink: {
-    fontSize: 14,
+    fontSize: 12, // Reduced fontSize
     color: '#007AFF',
     marginTop: 5,
   },
-  orderDetails: {
-    fontSize: 14,
-    color: '#333',
-    marginBottom: 5,
-  },
-  orderTime: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 5,
-  },
-  status: {
-    fontSize: 14,
-    color: '#333',
-    marginBottom: 5,
-  },
-  amount: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 10,
-  },
-  paymentFailed: {
-    fontSize: 14,
-    color: '#FF3B30',
-    marginBottom: 5,
-  },
-  paymentFailedDetails: {
-    fontSize: 12,
-    color: '#666',
-    marginBottom: 10,
-  },
-  orderFooter: {
+  footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  rating: {
+  editButton: {
     flexDirection: 'row',
+    backgroundColor: '#007AFF',
+    borderRadius: 5,
+    paddingHorizontal: 10, // Reduced padding
+    paddingVertical: 5, // Reduced padding
     alignItems: 'center',
   },
-  ratingText: {
-    fontSize: 14,
-    color: '#333',
-    marginRight: 10,
-  },
-  paymentStatus: {
-    fontSize: 12,
-    color: '#666',
-    backgroundColor: '#eee',
-    padding: 5,
+  deleteButton: {
+    flexDirection: 'row',
+    backgroundColor: '#FF3B30',
     borderRadius: 5,
+    paddingHorizontal: 10, // Reduced padding
+    paddingVertical: 5, // Reduced padding
+    alignItems: 'center',
+  },
+  toggleButton: {
+    flexDirection: 'row',
+    backgroundColor: '#28a745',
+    borderRadius: 5,
+    paddingHorizontal: 10, // Reduced padding
+    paddingVertical: 5, // Reduced padding
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 14, // Reduced fontSize
+    marginLeft: 5,
   },
 });
-export default FoodItemRoow;
-// onPress={() => navigation.navigate("Restaurant-Screen",{item:item})}
+
+export default FoodItemRow;

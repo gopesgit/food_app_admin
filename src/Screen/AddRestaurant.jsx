@@ -1,6 +1,5 @@
-import { KeyboardAvoidingView, ScrollView, StatusBar, StyleSheet, TextInput, View, Image, Pressable, ToastAndroid, Platform } from 'react-native';
+import { KeyboardAvoidingView, ScrollView, StatusBar, StyleSheet, TextInput, View, Image, Pressable, ToastAndroid, Platform, Alert } from 'react-native';
 import React, { useContext, useState } from 'react';
-import { globalStyle } from '../common/style';
 import { Button, Icon } from '@rneui/base';
 import { checkFormData, insertData, pickImage } from '../common/someCommonFunction';
 import { API_RESTAURANT } from '../common/apiURL';
@@ -8,6 +7,8 @@ import { OperationContext } from '../context/operationContext';
 import { AuthContext } from '../context/authContex';
 import * as Location from 'expo-location';
 import { useNavigation } from '@react-navigation/native';
+import { Picker } from '@react-native-picker/picker';
+
 const AddRestaurant = ({ setModalVisible }) => {
   const { allFunction } = useContext(OperationContext);
   const { user } = useContext(AuthContext);
@@ -27,8 +28,17 @@ const AddRestaurant = ({ setModalVisible }) => {
   const [licenses, setLicenses] = useState('');
   const [branch, setBranch] = useState('');
   const [licensesUrl, setLicensesUrl] = useState('To be added');
+  const [branchOptions, setBranchOptions] = useState([
+    { label: 'Main Branch', value: 'main' },
+    { label: 'Secondary Branch-1', value: 'secondary-1' },
+    { label: 'Secondary Branch-2', value: 'secondary-2' },
+    { label: 'Secondary Branch-3', value: 'secondary-3' },
+    { label: 'Other Branch', value: 'other' },
+  ]);
   const navigation = useNavigation();
+
   const handleSubmit = async () => {
+    const message = 'Restaurant add successful!';
     const data = { 
       name, 
       street_address: streetAddress,
@@ -46,59 +56,59 @@ const AddRestaurant = ({ setModalVisible }) => {
     };
     const requiredFields = ['name', 'street_address', 'city', 'state', 'postal_code', 'country', 'description', 'latitude', 'longitude', 'email', 'licenses', 'branch', 'licenses_url'];
 
-
     if (!checkFormData(data, requiredFields) || !image || !logo) {
       ToastAndroid.showWithGravity('Missing or empty field', ToastAndroid.LONG, ToastAndroid.TOP);
       return;
     }
 
     let formdata = new FormData();
-    // formdata.append('image', {
-    //   uri: image,
-    //   type: 'image/jpeg',
-    //   name: 'photo.jpg'
-    // });
-    // formdata.append('logo', {
-    //   uri: logo,
-    //   type: 'image/jpeg',
-    //   name: 'logo.jpg'
-    // });
-    formdata.append('user_id', user.email);
+    formdata.append('image', {
+      uri: image,
+      type: 'image/jpeg',
+      name: 'photo.jpg'
+    });
+    formdata.append('logo', {
+      uri: logo,
+      type: 'image/jpeg',
+      name: 'logo.jpg'
+    });
     Object.keys(data).forEach(key => {
       formdata.append(key, data[key]);
     });
-   formdata.append("closed",false);
-   formdata.append("active",true);//this will change
-   formdata.append("available_for_delivery",true);
-    console.log("available_for_delivery",formdata);
-    // try {
-    //   setLoading(true);
-    //   //await insertData(formdata, API_RESTAURANT);
-    //   // setName('');
-    //   // setStreetAddress('');
-    //   // setCity('');
-    //   // setState('');
-    //   // setPostalCode('');
-    //   // setCountry('');
-    //   // setDescription('');
-    //   // setBranch('');
-    //   // setEmail('');
-    //   // setLatitude('');
-    //   // setLicenses('');
-    //   // setLongitude('');
-    //   // setImage(null);
-    //   // setLogo(null);
-    //   // setLicensesUrl('');
-    //   // allFunction();
-    //   // navigation.navigate("HomeScreen")
-     
-    //   ToastAndroid.showWithGravity('Data submitted successfully', ToastAndroid.LONG, ToastAndroid.TOP);
-    // } catch (error) {
-    //   ToastAndroid.showWithGravity('Error submitting data', ToastAndroid.LONG, ToastAndroid.TOP);
-    //   setLoading(false);
-    // }
+    formdata.append("closed", 1);
+    formdata.append("active", 1);
+    formdata.append("available_for_delivery", 1);
+    formdata.append("user_id", user.email);
+    //console.log(formdata);
+    try {
+      setLoading(true);
+      await insertData(formdata, API_RESTAURANT,message);
+      setName('');
+      setStreetAddress('');
+      setCity('');
+      setState('');
+      setPostalCode('');
+      setCountry('');
+      setDescription('');
+      setBranch('');
+      setEmail('');
+      setLatitude('');
+      setLicenses('');
+      setLongitude('');
+      setImage(null);
+      setLogo(null);
+      setLicensesUrl('');
+      allFunction();
+      navigation.navigate("HomeScreen");
+      //ToastAndroid.showWithGravity('Data submitted successfully', ToastAndroid.LONG, ToastAndroid.TOP);
+    } catch (error) {
+      console.log(error);
+      ToastAndroid.showWithGravity('Error submitting data', ToastAndroid.LONG, ToastAndroid.TOP);
+    } finally {
+      //setLoading(false); // Ensure loading state is turned off
+    }
   };
-  //complte work
+
   const fetchCurrentLocation = async () => {
     try {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -111,23 +121,21 @@ const AddRestaurant = ({ setModalVisible }) => {
         latitude: coords.latitude,
         longitude: coords.longitude,
       });
-      setLatitude(coords.latitude)
-      setLongitude(coords.longitude)
+      setLatitude(coords.latitude.toString());
+      setLongitude(coords.longitude.toString());
       const addressParts = location[0].formattedAddress.split(',').map(part => part.trim());
       const addressWithoutCode = addressParts.slice(1).join(', ');
       setStreetAddress(addressWithoutCode);
       setPostalCode(location[0].postalCode);
       setCountry(location[0].country);
-      setCity(location[0].city)
-      setState(location[0].region)
-      //console.log(location);
+      setCity(location[0].city);
+      setState(location[0].region);
     } catch (error) {
       console.error('Error fetching location:', error);
       Alert.alert('Location Error', 'Failed to fetch current location.');
     }
   };
-  console.log(latitude);
-  console.log(longitude)
+
   return (
     <View style={styles.container}>
       <KeyboardAvoidingView
@@ -198,23 +206,22 @@ const AddRestaurant = ({ setModalVisible }) => {
               style={styles.inputBox}
             />
             <TextInput
-              placeholder='Enter Pin code'
-              value={postalCode}
-              onChangeText={setPostalCode}
-              style={styles.inputBox}
-            />
-            <TextInput
               placeholder='Licenses'
               value={licenses}
               onChangeText={setLicenses}
               style={styles.inputBox}
             />
-            <TextInput
-              placeholder='Branch'
-              value={branch}
-              onChangeText={setBranch}
-              style={styles.inputBox}
-            />
+            <View style={styles.pickerContainer}>
+              <Picker
+                selectedValue={branch}
+                onValueChange={(itemValue) => setBranch(itemValue)}
+                style={styles.picker}
+              >
+                {branchOptions.map((option, index) => (
+                  <Picker.Item key={index} label={option.label} value={option.value} />
+                ))}
+              </Picker>
+            </View>
             <TextInput
               placeholder='Licenses URL'
               value={licensesUrl}
@@ -312,6 +319,17 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     marginBottom: 12,
     textAlignVertical: 'top',
+  },
+  pickerContainer: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    marginBottom: 12,
+  },
+  picker: {
+    height: 50,
+    width: '100%',
   },
   buttonContainer: {
     marginVertical: 16,

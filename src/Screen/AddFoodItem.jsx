@@ -1,68 +1,93 @@
-import { KeyboardAvoidingView, ScrollView, StatusBar, StyleSheet, TextInput, View, Image, Text, Pressable, Alert, ToastAndroid, SafeAreaView } from 'react-native'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState } from 'react';
+import { KeyboardAvoidingView, ScrollView, StatusBar, StyleSheet, TextInput, View, Image, Text, Pressable, ToastAndroid, SafeAreaView, Switch } from 'react-native';
+import { Button, Icon } from '@rneui/base';
+import { checkFormData, insertData, pickImage } from '../common/someCommonFunction';
+import { API_FOOD } from '../common/apiURL';
+import { OperationContext } from '../context/operationContext';
 import { globalStyle } from '../common/style'
-import { Button, Input, Icon, ListItem, Header } from '@rneui/base'
-import { checkFormData, insertData, pickImage } from '../common/someCommonFunction'
-import { API_FOOD } from '../common/apiURL'
-import { OperationContext } from '../context/operationContext'
-import { Dropdown } from 'react-native-element-dropdown'
-const AddFoodItem = ({route}) => {
-  //const 
+import { Picker } from '@react-native-picker/picker';
+import { useNavigation } from '@react-navigation/native';
+const AddFoodItem = ({ route }) => {
+  const navigation=useNavigation()
   const { rest_id } = route.params;
-  console.log(rest_id);
-  const { foodcategorie,allFunction } = useContext(OperationContext);
-  // console.log("RES=>",restaurant);
-  // console.log("FoodCAT=>",foodcategorie);
-  const [loading,setLoading]=useState(false);
+  const { foodcategorie, allFunction } = useContext(OperationContext);
+  const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
-  const [description, setDescription] = useState("");
-  const [ingredients, setIngredients] = useState("");
-  const [package_items_count, setPackageItemsCount] = useState("");
-  const [weight, setWeight] = useState("");
-  const [unit, setUnit] = useState("");
-  const [featured, setFeatured] = useState("");
-  const [deliverable, setDeliverable] = useState("");
-  const [restaurant_id, setRestaurant] = useState(rest_id);
-  const [category_id, setFoodCategorie] = useState("");
-  const [discount_price, setDiscountPrice] = useState("");
-  const handelSubmit = async () => {
-    let data = { name, price, description, ingredients, package_items_count, weight, unit, featured, deliverable, restaurant_id, category_id, discount_price }
+  const [name, setName] = useState('');
+  const [price, setPrice] = useState('');
+  const [description, setDescription] = useState('');
+  const [ingredients, setIngredients] = useState('');
+  const [package_items_count, setPackageItemsCount] = useState('');
+  const [weight, setWeight] = useState('');
+  const [unit, setUnit] = useState('');
+
+  const [deliverable, setDeliverable] = useState(false);
+  const [restaurant_id] = useState(rest_id);
+  const [category_id, setFoodCategorie] = useState('');
+  const [discount_price, setDiscountPrice] = useState('');
+  const [active, setActive] = useState(1);
+
+  const handleSubmit = async () => {
+    const data = {
+      name,
+      price: parseFloat(price),
+      description,
+      ingredients:ingredients==='' ? 'Enter some ingredients of food' : ingredients,
+      package_items_count:package_items_count===''?0:parseFloat(package_items_count),
+      weight:weight===''?0: parseFloat(weight),
+      unit:unit==''?'pcs':unit,
+      deliverable: deliverable ? 1 : 0,
+      active,
+      restaurant_id,
+      category_id,
+      discount_price:discount_price===''?0:parseFloat(discount_price),
+    };
+
     const requiredFields = ['name', 'price', 'description', 'restaurant_id', 'category_id'];
     if (!checkFormData(data, requiredFields) || !image) {
-      ToastAndroid.showWithGravity(`Missing or empty field`, ToastAndroid.LONG, ToastAndroid.TOP)
-      return
+      ToastAndroid.showWithGravity(`Missing or empty field`, ToastAndroid.LONG, ToastAndroid.TOP);
+      return;
     }
-    let formdata = new FormData()
+
+    let formdata = new FormData();
     formdata.append('image', {
       uri: image,
-      type: 'image/jpeg',  // Adjust according to your file type
-      name: 'photo.jpg'    // Adjust file name as needed
+      type: 'image/jpeg',
+      name: 'photo.jpg',
     });
     Object.keys(data).forEach(key => {
       formdata.append(key, data[key]);
     });
-    //console.log(formdata);
+    console.log(formdata);
     try {
-      setLoading(true)
-      await insertData(formdata, API_FOOD)
-      setImage(null)
-      setLoading(false)
-      allFunction()
-      setAddFoodModal(false)
-      ToastAndroid.showWithGravity(`Data submit`, ToastAndroid.LONG, ToastAndroid.TOP)
+      setLoading(true);
+      await insertData(formdata, API_FOOD,"Food Item added");
+      setName('');
+      setPrice('');
+      setDescription('');
+      setIngredients('');
+      setPackageItemsCount('');
+      setWeight('');
+      setUnit('');
+      setDeliverable(false);
+      setFoodCategorie('');
+      setDiscountPrice('');
+      setImage(null);
+      navigation.navigate('HomeScreen')
+      setLoading(false);
+      //ToastAndroid.showWithGravity(`Data submitted`, ToastAndroid.LONG, ToastAndroid.TOP);
     } catch (error) {
-      ToastAndroid.showWithGravity(`Error`, ToastAndroid.LONG, ToastAndroid.TOP)
+      setLoading(false);
+      ToastAndroid.showWithGravity(`Error submitting data`, ToastAndroid.LONG, ToastAndroid.TOP);
     }
-   
-  }
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
-      <KeyboardAvoidingView>
-        <ScrollView>
-          <View style={{ marginHorizontal: 12 }}>
-            <View style={globalStyle.inputBoxImage}>
+      <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+        <ScrollView contentContainerStyle={styles.scrollView}>
+          <View style={styles.form}>
+          <View style={globalStyle.inputBoxImage}>
               <View style={{ position: 'relative' }}>
                 <Pressable onPress={() => pickImage(setImage)}>
                   {!image &&
@@ -82,126 +107,160 @@ const AddFoodItem = ({route}) => {
             <TextInput
               placeholder='Enter name of Food'
               value={name}
-              onChangeText={(text) => setName(text)}
-              style={globalStyle.inputBox}
+              onChangeText={setName}
+              style={styles.input}
             />
-
             <TextInput
-              placeholder='Price Of Food'
+              placeholder='Price of Food'
               value={price}
-              onChangeText={(text) => setPrice(text)}
-              style={globalStyle.inputBox}
-              keyboardType='number-pad'
+              onChangeText={setPrice}
+              style={styles.input}
+              keyboardType='numeric'
             />
             <TextInput
-              placeholder='Discount of Food Price'
+              placeholder='Discount Price'
               value={discount_price}
-              onChangeText={(text) => setDiscountPrice(text)}
-              style={globalStyle.inputBox}
-              keyboardType='number-pad'
+              onChangeText={setDiscountPrice}
+              style={styles.input}
+              keyboardType='numeric'
             />
-
             <TextInput
-              placeholder='description  of food item'
+              placeholder='Description of Food Item'
               value={description}
-              onChangeText={(text) => setDescription(text)}
+              onChangeText={setDescription}
               multiline
               numberOfLines={4}
-              style={globalStyle.inputBoxArea}
+              style={styles.textArea}
             />
             <TextInput
-              placeholder='Ingredients of food '
+              placeholder='Ingredients of Food'
               value={ingredients}
-              onChangeText={(text) => setIngredients(text)}
+              onChangeText={setIngredients}
               multiline
               numberOfLines={4}
-              style={globalStyle.inputBoxArea}
+              style={styles.textArea}
             />
             <TextInput
-              placeholder='package_items_count'
+              placeholder='Package Items Count'
               value={package_items_count}
-              onChangeText={(text) => setPackageItemsCount(text)}
-              style={globalStyle.inputBox}
-
+              onChangeText={setPackageItemsCount}
+              style={styles.input}
+              keyboardType='numeric'
             />
             <TextInput
-              placeholder='weight'
+              placeholder='Weight'
               value={weight}
-              onChangeText={(text) => setWeight(text)}
-              style={globalStyle.inputBox}
+              onChangeText={setWeight}
+              style={styles.input}
+              keyboardType='numeric'
             />
             <TextInput
-              placeholder='unit'
+              placeholder='Unit(gm,pcs,litter)'
               value={unit}
-              onChangeText={(text) => setUnit(text)}
-              style={globalStyle.inputBox}
+              onChangeText={setUnit}
+              style={styles.input}
             />
-            <TextInput
-              placeholder='featured'
-              value={featured}
-              onChangeText={(text) => setFeatured(text)}
-              style={globalStyle.inputBox}
-            />
-            <TextInput
-              placeholder='deliverable'
-              value={deliverable}
-              onChangeText={(text) => setDeliverable(text)}
-              style={[globalStyle.inputBox]}
-            />
-       
-          {foodcategorie &&
-              <View >
-                <Dropdown
-                  style={styles.dropdown}
-                  data={foodcategorie}
-                  labelField="name"
-                  // valueField="value"
-                  placeholder="Select Transaction Type"
-                  onChange={(item) => {
-                    console.log("=>", item.id)
-                    setFoodCategorie(item.id)
-                    //setTrantype(item.value)
-                  }}
-                />
+          
+            <View style={styles.switchContainer}>
+              <Text>Deliverable</Text>
+              <Switch
+                value={deliverable}
+                onValueChange={setDeliverable}
+              />            
+            </View>
+
+            {foodcategorie && (
+               <View style={styles.pickerContainer}>
+              <Picker
+                selectedValue={category_id}
+                style={styles.picker}
+                onValueChange={(itemValue) => setFoodCategorie(itemValue)}
+              >
+                <Picker.Item label="Select Category" value="" />
+                {foodcategorie.map((category) => (
+                  <Picker.Item key={category.id} label={category.name} value={category.id} />
+                ))}
+              </Picker>
               </View>
-            }
-             {loading?
-             <Button title="outline" type="solid" loading size='lg' />
-             :
-            <Button title="Add Food " onPress={handelSubmit} />
-             }
+            )}
+
+
+            {loading ? (
+              <Button title="Submitting..." type="solid" loading size='lg' />
+            ) : (
+              <Button title="Add Food" onPress={handleSubmit} />
+            )}
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
       <StatusBar style='auto' />
     </SafeAreaView>
-  
-  )
-}
-
-export default AddFoodItem
+  );
+};
 
 const styles = StyleSheet.create({
+  scrollView: {
+    padding: 12,
+  },
+  form: {
+    marginHorizontal: 12,
+  },
+  imageContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
   image: {
     width: '100%',
     height: 200,
     borderRadius: 12,
-
+  },
+  input: {
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 12,
+    borderColor: '#ddd',
+    borderWidth: 1,
+  },
+  textArea: {
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 12,
+    borderColor: '#ddd',
+    borderWidth: 1,
+    height: 100,
+    textAlignVertical: 'top',
   },
   dropdown: {
     height: 40,
-    backgroundColor: "#ffffff",
+    backgroundColor: '#ffffff',
     borderRadius: 10,
     marginVertical: 5,
     paddingLeft: 10,
-    color: "#af9f85",
+    color: '#af9f85',
     shadowColor: '#000',
-    shadowOffset: {
-        width: 0,
-        height: 1,
-    },
+    shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 1.41,
     elevation: 2,
-},
-})
+  },
+  switchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  pickerContainer: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    marginBottom: 12,
+  },
+  picker: {
+    height: 50,
+    width: '100%',
+  },
+});
+
+export default AddFoodItem;
