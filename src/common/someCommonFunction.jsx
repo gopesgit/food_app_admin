@@ -88,6 +88,6 @@ export const getData = async (API_URL) => {
       return response.data
   } catch (error) {
     
-      //console.log(error);        
+      console.log(error);        
   }
 }

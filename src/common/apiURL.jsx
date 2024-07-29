@@ -6,5 +6,7 @@ export const API_ORDER_LIST="https://shop.mondalsoft.com/api/restaurantorderlist
 export const API_ORDER="https://shop.mondalsoft.com/api/order/"
 export const API_RESTAURANT_OWNER="http://shop.mondalsoft.com/api/restaurantlistbyowner/"
 export const API_DELIVERY_FEES="https://shop.mondalsoft.com/api/deliveryfees"
-
 export const API_DELIVERY_FEES_BY_RES="https://shop.mondalsoft.com/api/deliveryfeesbyrestaurants/"
+export const API_COUPON_INSERT="https://shop.mondalsoft.com/api/couponinsert"
+export const API_COUPON_RES="https://shop.mondalsoft.com/api/couponall/"
+export const API_COUPON_UPDATE="https://shop.mondalsoft.com/api/couponupdate/"

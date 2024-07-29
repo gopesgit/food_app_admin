@@ -120,6 +120,10 @@ const RestaurantRow = ({ item, onRefresh }) => {
           <Icon name="add" color="#fff" size={18} />
           <Text style={styles.actionButtonText}>Delivery Fees</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.buttonOrder} onPress={() =>navigation.navigate("Coupon-Screen", { rest_id: item.id })}>
+          <Icon name="add" color="#fff" size={18} />
+          <Text style={styles.actionButtonText}>Add Coupon</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

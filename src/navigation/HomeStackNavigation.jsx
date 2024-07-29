@@ -9,6 +9,8 @@ import OrderScreen from '../Screen/OrderScreen';
 import DeliveryFeeScreen from '../Screen/DeliveryFeeScreen';
 import AddDeliveryFeeScreen from '../Screen/AddDeliveryFeeScreen';
 import EditDeliveryFeeScreen from '../Screen/EditDeliveryFeeScreen ';
+import CouponScreen from '../Screen/CouponScreen';
+import CouponForm from '../Screen/CouponForm';
 const HomeStack = createStackNavigator();
 const HomeStackNavigation = () => {
     return (
@@ -52,6 +54,14 @@ const HomeStackNavigation = () => {
             <HomeStack.Screen
                 name="EditDeliveryFeeScreen"
                 component={EditDeliveryFeeScreen}
+            />
+             <HomeStack.Screen
+                name="Coupon-Screen"
+                component={CouponScreen}
+            />
+             <HomeStack.Screen
+                name="Coupon-Form"
+                component={CouponForm}
             />
 
         </HomeStack.Navigator>
