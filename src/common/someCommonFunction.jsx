@@ -38,7 +38,7 @@ export const insertData = async (formdata, APIURL,message="") => {
         },
       }
     );
-    //console.log('Upload successful! ', response);
+    console.log('Upload successful! ', response);
     ToastAndroid.showWithGravity(message, ToastAndroid.LONG, ToastAndroid.TOP)
     return response
   } catch (error) {
@@ -82,4 +82,12 @@ export const updateData = async (formdata, APIURL,message="") => {
     ToastAndroid.showWithGravity('Something worng! ', ToastAndroid.LONG, ToastAndroid.TOP)
   }
 }
-
+export const getData = async (API_URL) => {
+  try {
+      const response = await axios.get(API_URL);       
+      return response.data
+  } catch (error) {
+    
+      //console.log(error);        
+  }
+}

@@ -5,3 +5,6 @@ export const API_FOOD_CATEGORIE="http://shop.mondalsoft.com/api/foodcategorie"
 export const API_ORDER_LIST="https://shop.mondalsoft.com/api/restaurantorderlist/"
 export const API_ORDER="https://shop.mondalsoft.com/api/order/"
 export const API_RESTAURANT_OWNER="http://shop.mondalsoft.com/api/restaurantlistbyowner/"
+export const API_DELIVERY_FEES="https://shop.mondalsoft.com/api/deliveryfees"
+
+export const API_DELIVERY_FEES_BY_RES="https://shop.mondalsoft.com/api/deliveryfeesbyrestaurants/"

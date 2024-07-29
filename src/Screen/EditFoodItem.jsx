@@ -10,7 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 const EditFoodItem = ({route}) => {
   const {item}=route.params
   const navigation=useNavigation();
-  //console.log(item);
+  console.log(item);
   const { foodcategorie,allFunction } = useContext(OperationContext);
   // console.log("RES=>",restaurant);
   // console.log("FoodCAT=>",foodcategorie);
