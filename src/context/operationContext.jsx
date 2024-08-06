@@ -5,6 +5,7 @@ import axios from "axios";
 import { AuthContext } from "./authContex";
 
 const getData = async (API_URL) => {
+  //console.log(API_URL);
     try {
         const response = await axios.get(API_URL);       
         return response.data
@@ -48,9 +49,10 @@ export const OperationProvider = ({ children }) => {
     }
     const fetchOrderList = async (id) => {
         try {        
-          const orderlistPending = await getData(API_ORDER_LIST +id);          
+          const orderlistPending = await getData(API_ORDER_LIST +id);  
+          //console.log("o==>",orderlistPending);        
           if (orderlistPending && orderlistPending.length > 0) {
-            //console.log("From:",orderlistPending);            
+            console.log("From:",orderlistPending);            
             return orderlistPending.filter((item)=>item.status_restaurant!=='cancel'&&item.status_restaurant!=='delivery'); // Return the fetched data
           } else {
             return []; 

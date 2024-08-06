@@ -10,7 +10,7 @@ import { API_ORDER } from '../common/apiURL';
 import { insertData } from '../common/someCommonFunction';
 import { OperationContext } from '../context/operationContext';
 const OrderItemRoow = ({ item }) => {    
-    //console.log(item);
+    console.log("item OrderItemRoow",item);
     const navigation = useNavigation();
   
     //console.log("===>",item.restaurant_id);
@@ -51,7 +51,7 @@ const OrderItemRoow = ({ item }) => {
             <Card>
                 <Card.Title>{ moment(item.updatedAt).format('MMMM Do YYYY, h:mm:ss a')},{item.status_restaurant}</Card.Title>
 
-                {item.orders.map((item, index) => {
+                {item.order_details.map((item, index) => {
                     return (
                         <View key={item.id} style={{ borderBottomWidth: 1, paddingVertical: 4, borderTopWidth: 1, marginVertical: 1 }}>
                             <Text >Food Name: {item.name}</Text>

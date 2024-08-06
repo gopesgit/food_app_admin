@@ -10,7 +10,9 @@ const RestaurantRow = ({ item, onRefresh }) => {
   const navigation = useNavigation();
   const [pendingOrders, setPendingOrders] = useState([]);
   const { fetchOrderList } = useContext(OperationContext);
-
+  // console.log('====================================');
+  // console.log(await fetchOrderList(item.id));
+  // console.log('====================================');
   // Function to handle the toggle between open and closed states
   const handleClosedToggle = async () => {
     const formData = new FormData();
@@ -42,7 +44,7 @@ const RestaurantRow = ({ item, onRefresh }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const orderList = await fetchOrderList(item.id);
+        const orderList = await fetchOrderList(item.id);       
         setPendingOrders(orderList.filter((order) => order.status_restaurant !== 'cancel'));
       } catch (error) {
         console.error('Error fetching order list:', error);
@@ -85,6 +87,7 @@ const RestaurantRow = ({ item, onRefresh }) => {
           <TouchableOpacity
             style={styles.buttonDelivery}
             onPress={() => navigation.navigate("Order-List", { oitem: pendingOrders })}
+            // onPress={()=>console.log("pending",pendingOrders)}
           >
             <Icon name="add" color="#fff" size={18} />
             <Text style={styles.actionButtonText}>Delivery ({pendingOrders.length})</Text>
