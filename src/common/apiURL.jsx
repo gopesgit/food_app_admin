@@ -10,3 +10,6 @@ export const API_DELIVERY_FEES_BY_RES="https://shop.mondalsoft.com/api/deliveryf
 export const API_COUPON_INSERT="https://shop.mondalsoft.com/api/couponinsert"
 export const API_COUPON_RES="https://shop.mondalsoft.com/api/couponall/"
 export const API_COUPON_UPDATE="https://shop.mondalsoft.com/api/couponupdate/"
+export const API_FOOD_CATEGORIE_LIST="https://shop.mondalsoft.com/api/foodcategorieall/"
+export const API_REST_FOOD="http://shop.mondalsoft.com/api/restaurant/"
+export const API_ORDERVIEW_DELIVERY="https://shop.mondalsoft.com/api/orderviewdelivery"

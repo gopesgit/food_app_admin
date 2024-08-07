@@ -30,7 +30,7 @@ const CouponForm = ({ route, navigation }) => {
 
     useEffect(() => {
         if (couponItem) {
-            setCoupon({ ...couponItem, valid_for_user: couponItem.valid_for_user || 'all' });
+            setCoupon({ ...couponItem, valid_for_user: couponItem.valid_for_user || '0' });
         }
     }, [couponItem]);
 
@@ -63,6 +63,16 @@ const CouponForm = ({ route, navigation }) => {
             valid = false;
         }
 
+        if (!coupon.discount_max) {
+            errors.discount_max = 'Maximum Discount must be a number';
+            valid = false;
+        }
+
+        if (!coupon.valid_for_user) {
+            errors.valid_for_user = 'Valid User must be a number';
+            valid = false;
+        }
+
         setErrors(errors);
         return valid;
     };
@@ -88,10 +98,10 @@ const CouponForm = ({ route, navigation }) => {
             formData.append('discount_type',coupon.discount_type);
             formData.append('discount_value', coupon.discount_value);
             formData.append('discount_min', 0);
-            formData.append('discount_max', 0);
+            formData.append('discount_max', coupon.discount_max);
             formData.append('min_order_val',coupon.min_order_val);
             formData.append('quantity', coupon.quantity);
-            formData.append('valid_for_user', 0);
+            formData.append('valid_for_user', coupon.valid_for_user);
             formData.append('valid_from',validFrom); // Replace with actual validFrom variable
             formData.append('valid_until', validUntil); // Replace with actual validUntil variable
             formData.append('active', 0);
@@ -123,14 +133,16 @@ const CouponForm = ({ route, navigation }) => {
         <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.header}>Coupon Form</Text>
 
+            <Text style={styles.label}>Coupon Code</Text>
             <TextInput
                 style={styles.input}
-                placeholder="Code"
+                placeholder="Coupon Code"
                 value={coupon.code}
                 onChangeText={(text) => handleChange('code', text)}
             />
             {errors.code && <Text style={styles.errorText}>{errors.code}</Text>}
 
+            <Text style={styles.label}>Discount Type</Text>
             <Picker
                 selectedValue={coupon.discount_type}
                 style={styles.picker}
@@ -142,6 +154,7 @@ const CouponForm = ({ route, navigation }) => {
             </Picker>
             {errors.discount_type && <Text style={styles.errorText}>{errors.discount_type}</Text>}
 
+            <Text style={styles.label}>Discount Value</Text>
             <TextInput
                 style={styles.input}
                 placeholder="Discount Value"
@@ -151,6 +164,17 @@ const CouponForm = ({ route, navigation }) => {
             />
             {errors.discount_value && <Text style={styles.errorText}>{errors.discount_value}</Text>}
 
+            <Text style={styles.label}>Maximum Discount Value</Text>
+            <TextInput
+                style={styles.input}
+                placeholder="Maximum Discount Value"
+                value={coupon.discount_max}
+                keyboardType="numeric"
+                onChangeText={(text) => handleChange('discount_max', text)}
+            />
+            {errors.discount_max && <Text style={styles.errorText}>{errors.discount_max}</Text>}
+
+            <Text style={styles.label}>Minimum Order Value</Text>
             <TextInput
                 style={styles.input}
                 placeholder="Minimum Order Value"
@@ -160,15 +184,17 @@ const CouponForm = ({ route, navigation }) => {
             />
             {errors.min_order_val && <Text style={styles.errorText}>{errors.min_order_val}</Text>}
 
+            <Text style={styles.label}>Coupon Quantity</Text>
             <TextInput
                 style={styles.input}
                 placeholder="Quantity"
-                value={coupon.quantity}
+                value={coupon.quantity.toString()}
                 keyboardType="numeric"
                 onChangeText={(text) => handleChange('quantity', text)}
             />
             {errors.quantity && <Text style={styles.errorText}>{errors.quantity}</Text>}
 
+            <Text style={styles.label}>Description</Text>
             <TextInput
                 style={styles.input}
                 placeholder="Description"
@@ -176,6 +202,16 @@ const CouponForm = ({ route, navigation }) => {
                 onChangeText={(text) => handleChange('description', text)}
             />
             {errors.description && <Text style={styles.errorText}>{errors.description}</Text>}
+
+            <Text style={styles.label}>Customer Mobile Number</Text>
+            <TextInput
+                style={styles.input}
+                placeholder="Customer Mobile Number"
+                value={coupon.valid_for_user}
+                onChangeText={(text) => handleChange('valid_for_user', text)}
+            />
+            {errors.valid_for_user && <Text style={styles.errorText}>{errors.valid_for_user}</Text>}
+            <Text style={styles.noteText}>* If you want to issue this coupon to any specific customer enter mobile number of that customer Or set it 0 For All</Text>
 
             <TouchableOpacity style={styles.button} onPress={handleSubmit}>
                 <Text style={styles.buttonText}>Save Coupon</Text>
@@ -194,6 +230,16 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 20,
         color: '#343a40',
+    },
+    label: {
+        top: 10,
+        left: 10,
+        backgroundColor: '#f8f9fa',
+        paddingHorizontal: 5,
+        zIndex: 1,
+        fontSize: 14,
+        color: '#333',
+        alignSelf: 'flex-start',
     },
     input: {
         height: 50,
@@ -217,6 +263,12 @@ const styles = StyleSheet.create({
         color: '#dc3545',
         marginBottom: 12,
         fontSize: 14,
+    },
+    noteText: {
+        color: '#dc3545',
+        marginBottom: 12,
+        fontSize: 14,
+        textAlign: 'center',
     },
     button: {
         backgroundColor: '#28a745',

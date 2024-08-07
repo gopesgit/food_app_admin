@@ -5,7 +5,6 @@ import axios from "axios";
 import { AuthContext } from "./authContex";
 
 const getData = async (API_URL) => {
-  //console.log(API_URL);
     try {
         const response = await axios.get(API_URL);       
         return response.data
@@ -32,9 +31,15 @@ export const OperationProvider = ({ children }) => {
     }
     const getRestaurantList = async () => {
         setRestaurant([]);
-        //console.log("Operation=> ",await getData(API_RESTAURANT_OWNER+user.email))             
-        setRestaurant((await  getData(API_RESTAURANT_OWNER+user.email)).filter((item)=>item.user_id===user.email))
-        return (await  getData(API_RESTAURANT_OWNER+user.email)).filter((item)=>item.user_id===user.email)
+        //console.log("Operation=> ",await getData(API_RESTAURANT_OWNER+user.email))
+        if (user.type === "admin") {
+          setRestaurant((await  getData(API_RESTAURANT)));
+          return (await  getData(API_RESTAURANT));
+        }else{
+          setRestaurant((await  getData(API_RESTAURANT_OWNER+user.email)).filter((item)=>item.user_id===user.email));
+          return (await  getData(API_RESTAURANT_OWNER+user.email)).filter((item)=>item.user_id===user.email);
+        }
+      return (await  getData(API_RESTAURANT_OWNER+user.email)).filter((item)=>item.user_id===user.email);
     }
     const getFoodCateList = async () => {
         setFoodCat([]);
@@ -49,10 +54,9 @@ export const OperationProvider = ({ children }) => {
     }
     const fetchOrderList = async (id) => {
         try {        
-          const orderlistPending = await getData(API_ORDER_LIST +id);  
-          //console.log("o==>",orderlistPending);        
+          const orderlistPending = await getData(API_ORDER_LIST +id);          
           if (orderlistPending && orderlistPending.length > 0) {
-            console.log("From:",orderlistPending);            
+            //console.log("From:",orderlistPending);            
             return orderlistPending.filter((item)=>item.status_restaurant!=='cancel'&&item.status_restaurant!=='delivery'); // Return the fetched data
           } else {
             return []; 
@@ -65,7 +69,31 @@ export const OperationProvider = ({ children }) => {
         }
       };
 
-    return (<OperationContext.Provider value={{ restaurant, setRestaurant,foodcategorie,setFoodCat,allFunction,fetchOrderList,order,getOrderList,getRestaurantList }}>
+      const fetchOrderListAll = async (id) => {
+        try {
+          // Assuming getData is a function that wraps a fetch call
+          const response = await fetch(API_ORDER_LIST + id); // Directly use fetch
+          if (!response.ok) {
+            console.error('Network response was not ok');
+            return [];
+          }
+          
+          const data = await response.json();
+          if (data && data.length > 0) {
+            return data;
+          } else {
+            console.log('Order list is empty or undefined');
+            return [];
+          }
+      
+        } catch (error) {
+          console.error('Error fetching order list:', error);
+          return [];
+        }
+      };
+      
+    
+    return (<OperationContext.Provider value={{ restaurant, setRestaurant,foodcategorie,setFoodCat,allFunction,fetchOrderList,fetchOrderListAll,order,getOrderList,getRestaurantList }}>
         {children}
     </OperationContext.Provider>)
 

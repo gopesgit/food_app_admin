@@ -5,14 +5,14 @@ import { useNavigation } from '@react-navigation/native';
 import { OperationContext } from '../context/operationContext';
 import { updateData } from '../common/someCommonFunction';
 import { API_RESTAURANT } from '../common/apiURL';
+import { AuthContext } from '../context/authContex';
 
 const RestaurantRow = ({ item, onRefresh }) => {
   const navigation = useNavigation();
   const [pendingOrders, setPendingOrders] = useState([]);
   const { fetchOrderList } = useContext(OperationContext);
-  // console.log('====================================');
-  // console.log(await fetchOrderList(item.id));
-  // console.log('====================================');
+  const { user } = useContext(AuthContext);
+
   // Function to handle the toggle between open and closed states
   const handleClosedToggle = async () => {
     const formData = new FormData();
@@ -41,10 +41,24 @@ const RestaurantRow = ({ item, onRefresh }) => {
     }
   };
 
+  // Function to handle the toggle for Restaruant Status
+  const handleApproveRejectToggle = async () => {
+    const formData = new FormData();
+    formData.append('_method', 'put');
+    formData.append('active', item.active ? 0 : 1);
+
+    try {
+      await updateData(formData, `${API_RESTAURANT}/${item.id}`, "Restaurant Active Status Update");
+      onRefresh();
+    } catch (error) {
+      console.error("Error updating Active status:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const orderList = await fetchOrderList(item.id);       
+        const orderList = await fetchOrderList(item.id);
         setPendingOrders(orderList.filter((order) => order.status_restaurant !== 'cancel'));
       } catch (error) {
         console.error('Error fetching order list:', error);
@@ -70,11 +84,11 @@ const RestaurantRow = ({ item, onRefresh }) => {
           type="material-community"
           size={20}
           color="#333"
-          onPress={() => navigation.navigate("Restaurant-Screen", { item })}
+          onPress={() => navigation.navigate("Restaurant-Screen", { id: item.id })}
         />
       </View>
-      <Text style={styles.orderDetails}>{item.address}</Text>
-      <Text style={styles.orderTime}>Pin: {item.pincode}</Text>
+      <Text style={styles.orderDetails}>{ item.street_address }</Text>
+      <Text style={styles.orderTime}>Pin: {item.postal_code}</Text>
       <Text style={styles.amount}>Licenses: {item.licenses}</Text>
       <Text style={styles.amount}>Branch: {item.branch}</Text>
       <View style={styles.orderFooter}>
@@ -87,7 +101,6 @@ const RestaurantRow = ({ item, onRefresh }) => {
           <TouchableOpacity
             style={styles.buttonDelivery}
             onPress={() => navigation.navigate("Order-List", { oitem: pendingOrders })}
-            // onPress={()=>console.log("pending",pendingOrders)}
           >
             <Icon name="add" color="#fff" size={18} />
             <Text style={styles.actionButtonText}>Delivery ({pendingOrders.length})</Text>
@@ -98,35 +111,76 @@ const RestaurantRow = ({ item, onRefresh }) => {
           <Icon name="add" color="#fff" size={18} />
           <Text style={styles.actionButtonText}>Add Food</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity style={styles.buttonOrder} onPress={() => navigation.navigate("Order", { rest_id: item.id })}>
-          <Icon name="add" color="#fff" size={18} />
-          <Text style={styles.actionButtonText}>Order</Text>
-        </TouchableOpacity>
-       
-        <TouchableOpacity 
-          style={item.closed ? styles.buttonOpen : styles.buttonClosed}
-          onPress={handleClosedToggle}
-        >
-          <Icon name={item.closed ? "check-circle" : "cancel"} color="#fff" size={18} />
-          <Text style={styles.actionButtonText}>{item.closed ? "Open" : "Closed"}</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity 
-          style={item.available_for_delivery ? styles.buttonAvailableForDeliveryActive : styles.buttonAvailableForDelivery}
-          onPress={handleAvailableForDeliveryToggle}
-        >
-          <Icon name={item.available_for_delivery ? "check-circle" : "cancel"} color="#fff" size={18} />
-          <Text style={styles.actionButtonText}>{item.available_for_delivery ? "Available for Delivery" : "Not Available for Delivery"}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonOrder} onPress={() =>navigation.navigate("DeliveryFeeScreen", { rest_id: item.id })}>
-          <Icon name="add" color="#fff" size={18} />
-          <Text style={styles.actionButtonText}>Delivery Fees</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonOrder} onPress={() =>navigation.navigate("Coupon-Screen", { rest_id: item.id })}>
-          <Icon name="add" color="#fff" size={18} />
-          <Text style={styles.actionButtonText}>Add Coupon</Text>
-        </TouchableOpacity>
+        {item.active === 1 ? (
+            <TouchableOpacity style={styles.buttonOrder} onPress={() => navigation.navigate("Order-List", { rest_id: item.id })}>
+              <Icon name="add" color="#fff" size={18} />
+              <Text style={styles.actionButtonText}>Order</Text>
+            </TouchableOpacity>
+        ) : (
+          <View style={styles.buttonOrderDisabled}>
+            <Icon name="add" color="#fff" size={18} />
+            <Text style={styles.actionButtonTextDisabled}>Order</Text>
+          </View>
+        )}
+        {item.active === 1 ? (
+            <TouchableOpacity 
+              style={item.closed ? styles.buttonOpen : styles.buttonClosed}
+              onPress={handleClosedToggle}
+            >
+              <Icon name={item.closed ? "check-circle" : "cancel"} color="#fff" size={18} />
+              <Text style={styles.actionButtonText}>{item.closed ? "Open" : "Closed"}</Text>
+            </TouchableOpacity>
+        ) : (
+          <View style={styles.buttonClosedDisabled}>
+            <Icon name="cancel" color="#fff" size={18} />
+            <Text style={styles.actionButtonTextDisabled}>Closed</Text>
+          </View>
+        )}
+        {item.active === 1 ? (
+          <TouchableOpacity 
+            style={item.available_for_delivery ? styles.buttonAvailableForDeliveryActive : styles.buttonAvailableForDelivery}
+            onPress={handleAvailableForDeliveryToggle}
+          >
+            <Icon name={item.available_for_delivery ? "check-circle" : "cancel"} color="#fff" size={18} />
+            <Text style={styles.actionButtonText}>{item.available_for_delivery ? "Available for Delivery" : "Not Available for Delivery"}</Text>
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.buttonDeliveryDisabled}>
+            <Icon name="cancel" color="#fff" size={18} />
+            <Text style={styles.actionButtonTextDisabled}>Not Available for Delivery</Text>
+          </View>
+        )}
+        {item.active === 1 ? (
+          <TouchableOpacity style={styles.buttonOrder} onPress={() =>navigation.navigate("DeliveryFeeScreen", { rest_id: item.id })}>
+            <Icon name="add" color="#fff" size={18} />
+            <Text style={styles.actionButtonText}>Delivery Fees</Text>
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.buttonOrderDisabled}>
+            <Icon name="add" color="#fff" size={18} />
+            <Text style={styles.actionButtonTextDisabled}>Delivery Fees</Text>
+          </View>
+        )}
+        {item.active === 1 ? (
+          <TouchableOpacity style={styles.buttonOrder} onPress={() =>navigation.navigate("Coupon-Screen", { rest_id: item.id })}>
+            <Icon name="add" color="#fff" size={18} />
+            <Text style={styles.actionButtonText}>Add Coupon</Text>
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.buttonOrderDisabled}>
+            <Icon name="add" color="#fff" size={18} />
+            <Text style={styles.actionButtonTextDisabled}>Add Coupon</Text>
+          </View>
+        )}
+        {user.type === 'admin' && (
+          <TouchableOpacity 
+            style={item.active === 1 ? styles.buttonOpen : styles.buttonClosed}
+            onPress={handleApproveRejectToggle}
+          >
+            <Icon name={item.active === 1 ? "check-circle" : "hourglass-empty"} color="#fff" size={18} />
+            <Text style={styles.actionButtonText}>{item.active === 1 ? "Approved Restaurant" : "Pending Restaurant"}</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -231,7 +285,17 @@ const styles = StyleSheet.create({
   buttonOrder: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#ff9800', // Changed color for distinction
+    backgroundColor: '#ff9800',
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 6,
+    marginRight: 8,
+    marginBottom: 8,
+  },
+  buttonOrderDisabled: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#ffb74d', // light color of #ff9800
     paddingVertical: 6,
     paddingHorizontal: 10,
     borderRadius: 6,
@@ -258,6 +322,16 @@ const styles = StyleSheet.create({
     marginRight: 8,
     marginBottom: 8,
   },
+  buttonClosedDisabled: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#ff6262', // Different color for open
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 6,
+    marginRight: 8,
+    marginBottom: 8,
+  },
   buttonAvailableForDelivery: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -278,10 +352,35 @@ const styles = StyleSheet.create({
     marginRight: 8,
     marginBottom: 8,
   },
+  buttonDeliveryDisabled: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#4da2ff',
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 6,
+    marginRight: 8,
+    marginBottom: 8,
+  },
   actionButtonText: {
     color: '#fff',
     fontSize: 12,
     marginLeft: 6,
+  },
+  actionButtonTextDisabled: {
+    color: '#fff', // Grey color to indicate disabled
+    fontSize: 12,
+    marginLeft: 6,
+  },
+  buttonPending: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#ccc', // Grey color to indicate pending
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 6,
+    marginRight: 8,
+    marginBottom: 8,
   },
 });
 

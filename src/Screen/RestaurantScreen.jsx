@@ -7,28 +7,18 @@ import FoodItemRoow from '../componet/FoodItemRoow';
 import { Icon, Card, Button } from '@rneui/base';
 import { useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
+import { API_REST_FOOD } from '../common/apiURL';
 
 const RestaurantScreen = ({ route }) => {
-  const { restaurant,getRestaurantList } = useContext(OperationContext);
+  const { getRestaurantList } = useContext(OperationContext);
   const [refreshing, setRefreshing] = useState(false);
-  //console.log(restaurant);
-  //const showAddRestaurant = !restaurant || restaurant.length === 0;
-  //console.log(restaurant.length);
-  //const [modalVisible, setModalVisible] = useState(false);
-  
-  const { item } = route.params;
-  console.log(item.id);  
-  const [restid,setRestID]=useState(item.id)
-  const [foodItem,setFoodItem] =useState( item.foods.filter((item)=>item.active==1))
-  const onRefresh = useCallback(async () => {
-    //const foodItem = item.foods.filter((item)=>item.active===1)
-    let updateres=await getRestaurantList()
-    console.log(updateres.filter((fitem)=>fitem.id===item.id)[0].foods);
-    //console.log("Res=>",(restaurant.filter((fitem)=>fitem.id===item.id))[0].foods.filter((item)=>!item.active));
-   
-    let foods=updateres.filter((fitem)=>fitem.id===item.id)[0].foods
-    console.log(foods.filter((item)=>item.active==1));
-    setFoodItem(foods.filter((item)=>item.active==1))
+  const { id } = route.params;
+  const [restaurant, setRestaurant] = useState(null);
+  const [foodItem,setFoodItem] = useState([]);
+  {/*const onRefresh = useCallback(async () => {
+  let updateres=await getRestaurantList()
+  let foods=updateres.filter((fitem)=>fitem.id===item.id)[0].foods;
+  setFoodItem(foods.filter((item)=>item.active==1));
     setRefreshing(true);
     try {
       await getRestaurantList(); // Function to fetch restaurants
@@ -37,16 +27,38 @@ const RestaurantScreen = ({ route }) => {
     }
     setRefreshing(false);
   }, []);
-  
+
   useFocusEffect(
     useCallback(() => {
       // Trigger refresh when screen gains focus
       onRefresh();
     }, [onRefresh])
   );
+  */}
+  const fetchRestaurantDetails = async (restaurantId) => {
+    try {
+      const response = await fetch(`${API_REST_FOOD}${restaurantId}/details`);
+      const data = await response.json();
+      setRestaurant(data);
+      setFoodItem(data.foods.filter((food) => food.active === 1));
+    } catch (error) {
+      console.error('Error fetching restaurant details:', error);
+    }
+  };
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await fetchRestaurantDetails(id);
+    setRefreshing(false);
+  }, [id]);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchRestaurantDetails(id); // Fetch details when the screen is focused
+    }, [id])
+  );
   return (
     <View style={styles.container}>
-      <View style={styles.searchContainer}>
+      {/*<View style={styles.searchContainer}>
         <Icon name="search" type="material" size={24} color="#888" />
         <TextInput
           style={styles.searchInput}
@@ -54,7 +66,13 @@ const RestaurantScreen = ({ route }) => {
           placeholderTextColor="#888"
         />
         <Icon name="mic" type="material" size={24} color="#888" />
-      </View>      
+      </View>*/}
+      {restaurant && (
+        <View style={styles.cardContainer}>
+          <Text style={styles.restaurantName}>{restaurant.name}</Text>
+          <Text style={styles.restaurantAddress}>{restaurant.street_address}, {restaurant.city}</Text>
+        </View>
+      )}
       <FlatList
         data={foodItem}
         renderItem={({ item }) => <FoodItemRoow item={item} onRefresh={onRefresh} />}
@@ -146,10 +164,31 @@ const styles = StyleSheet.create({
   orderInfo: {
     flex: 1,
   },
+  cardContainer: {
+    backgroundColor: '#ffffff',
+    marginHorizontal: 10,
+    marginTop: 5,
+    padding: 15,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 4,
+    alignItems: 'center',
+  },
   restaurantName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#333333',
+    textAlign: 'center',
+  },
+  restaurantAddress: {
+    fontSize: 10,
+    fontWeight: '200',
+    color: '#666666',
+    textAlign: 'center',
+    fontStyle: 'italic',
   },
   location: {
     fontSize: 14,

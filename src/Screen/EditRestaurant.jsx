@@ -111,9 +111,9 @@ fetchRestaurantDetails();
     Object.keys(data).forEach(key => {
       formdata.append(key, data[key]);
     });
-    formdata.append("closed", 1);
-    formdata.append("active", 1);
-    formdata.append("available_for_delivery", 1);
+    formdata.append("closed", 0);
+    formdata.append("active", 0);
+    formdata.append("available_for_delivery", 0);
     formdata.append('_method', 'put');
 
     try {
@@ -239,6 +239,7 @@ fetchRestaurantDetails();
               value={email}
               onChangeText={setEmail}
               style={styles.inputBox}
+              editable={user.type === 'admin'}
             />
             <TextInput
               placeholder='Licenses'

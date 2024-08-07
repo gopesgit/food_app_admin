@@ -11,6 +11,8 @@ import AddDeliveryFeeScreen from '../Screen/AddDeliveryFeeScreen';
 import EditDeliveryFeeScreen from '../Screen/EditDeliveryFeeScreen ';
 import CouponScreen from '../Screen/CouponScreen';
 import CouponForm from '../Screen/CouponForm';
+import AddFoodCatagorie from '../Screen/AddFoodCatagorie';
+import EditCategoryScreen from '../Screen/EditCategoryScreen';
 const HomeStack = createStackNavigator();
 const HomeStackNavigation = () => {
     return (
@@ -62,6 +64,14 @@ const HomeStackNavigation = () => {
              <HomeStack.Screen
                 name="Coupon-Form"
                 component={CouponForm}
+            />
+            <HomeStack.Screen
+                name="AddFoodCatagorie"
+                component={AddFoodCatagorie}
+            />
+            <HomeStack.Screen
+                name="EditCategoryScreen"
+                component={EditCategoryScreen}
             />
 
         </HomeStack.Navigator>

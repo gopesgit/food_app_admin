@@ -40,7 +40,16 @@ const FoodItemRow = ({ item, onRefresh }) => {
         <Image source={{ uri: item.food_image_url }} style={styles.image} />
         <View style={styles.info}>
           <Text style={styles.name}>{item.name}</Text>
-          <Text style={styles.price}>Rs. {item.price}</Text>
+          <View style={styles.priceContainer}>
+      <Text style={item.discount_price > 0 ? styles.strikethroughPrice : styles.price}>
+        Rs. {item.price}
+      </Text>
+      {item.discount_price > 0 && (
+        <Text style={styles.discountedPrice}>
+          Rs. {item.discount_price}
+        </Text>
+      )}
+    </View>
           {item.menuLink ? (
             <TouchableOpacity>
               <Text style={styles.menuLink}>{item.menuLink}</Text>
@@ -153,8 +162,23 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#fff',
-    fontSize: 14, // Reduced fontSize
+    fontSize: 14,
     marginLeft: 5,
+  },
+  priceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  strikethroughPrice: {
+    fontSize: 12,
+    color: '#666',
+    textDecorationLine: 'line-through',
+    marginRight: 5,
+  },
+  discountedPrice: {
+    fontSize: 12,
+    color: '#FF5733',
+    fontWeight: 'bold',
   },
 });
 

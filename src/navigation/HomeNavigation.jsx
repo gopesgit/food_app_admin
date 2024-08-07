@@ -8,6 +8,7 @@ import AddFoodItem from '../Screen/AddFoodItem'
 import { OperationProvider } from '../context/operationContext'
 import AddFoodCatagorie from '../Screen/AddFoodCatagorie'
 import HomeStackNavigation from './HomeStackNavigation'
+import FoodCategoryScreen from '../Screen/FoodCategoryScreen'
 const TabNavi = createBottomTabNavigator()
 const HomeNavigation = () => {
   return (
@@ -29,7 +30,7 @@ const HomeNavigation = () => {
 
           component={HomeStackNavigation}
         />
-        <TabNavi.Screen
+        {/*<TabNavi.Screen
           options={{
             title: "Add Food Catagorie",
             headerShown: true,
@@ -39,6 +40,17 @@ const HomeNavigation = () => {
           }}
           name="Add Food Catagorie"
           component={AddFoodCatagorie}
+        />*/}
+        <TabNavi.Screen
+          options={{
+            title: "Food Category List",
+            headerShown: true,
+            tabBarIcon: ({ color, size }) => (
+              <Icon name="transform" size={size} color={color} />
+            ),
+          }}
+          name="Food Category List"
+          component={FoodCategoryScreen}
         />
 
         

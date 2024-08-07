@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext, useState, useEffect } from 'react';
 import { StyleSheet, View, TouchableOpacity, TextInput, Text, FlatList, RefreshControl } from 'react-native';
 import { OperationContext } from '../context/operationContext';
 import RestaurantRow from '../componet/RestaurantRow';
@@ -8,6 +8,9 @@ import { useFocusEffect } from '@react-navigation/native';
 const HomeScreen = ({ navigation }) => {
   const { restaurant,getRestaurantList } = useContext(OperationContext);
   const [refreshing, setRefreshing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredRestaurants, setFilteredRestaurants] = useState(restaurant);
+
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
@@ -25,23 +28,37 @@ const HomeScreen = ({ navigation }) => {
     }, [onRefresh])
   );
 
+  useEffect(() => {
+    if (searchQuery === '') {
+      setFilteredRestaurants(restaurant);
+    } else {
+      const filteredData = restaurant.filter(item =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.branch.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredRestaurants(filteredData);
+    }
+  }, [searchQuery, restaurant]);
+
   return (
     <View style={styles.container}>
       <View style={styles.searchContainer}>
         <Icon name="search" type="material" size={24} color="#888" />
         <TextInput
           style={styles.searchInput}
-          placeholder="Search by restaurant or dish"
+          placeholder="Restaurant name, Description, Branch"
           placeholderTextColor="#888"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
         />
-        <Icon name="mic" type="material" size={24} color="#888" />
       </View>
       <TouchableOpacity style={[styles.editButton,{justifyContent:'center'}]} onPress={() => navigation.navigate('Add-Restaurant')}>
      
      <Text style={[styles.actionButtonText,{alignSelf:'center'}]}>Add New</Text>
    </TouchableOpacity>
       <FlatList
-        data={restaurant}
+        data={filteredRestaurants}
         renderItem={({ item }) => <RestaurantRow item={item} onRefresh={onRefresh} />}
         keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={styles.scrollViewContent}

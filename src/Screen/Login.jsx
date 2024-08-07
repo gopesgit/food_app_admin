@@ -28,11 +28,11 @@ export default function Login({ navigation }) {
         try {
             const result = await login({ email, password, type:userType }, setUser);
             
-            if (result) {
-                navigation.navigate('Home'); // Navigate to home or another screen
-            } else {
-                //Alert.alert("Error", "Login failed. Please check your credentials.");
-            }
+            // if (result) {
+            //     navigation.navigate('Home'); // Navigate to home or another screen
+            // } else {
+            //     //Alert.alert("Error", "Login failed. Please check your credentials.");
+            // }
         } catch (error) {
             console.log(error);
             //Alert.alert("Error", "An error occurred, please try again.");
