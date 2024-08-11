@@ -13,5 +13,4 @@ export const API_COUPON_UPDATE="https://shop.mondalsoft.com/api/couponupdate/"
 export const API_FOOD_CATEGORIE_LIST="https://shop.mondalsoft.com/api/foodcategorieall/"
 export const API_REST_FOOD="http://shop.mondalsoft.com/api/restaurant/"
 export const API_ORDERVIEW_DELIVERY="https://shop.mondalsoft.com/api/orderviewdelivery"
-
-orderdeliveryupdate
+export const API_ORDERUPADTE_DELIVERY="https://shop.mondalsoft.com/api/orderdeliveryupdate/"

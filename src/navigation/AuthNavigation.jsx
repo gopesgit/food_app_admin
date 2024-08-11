@@ -6,6 +6,7 @@ import { AuthContext } from '../context/authContex';
 import HomeNavigation from './HomeNavigation';
 import HomeStackNavigation from './HomeStackNavigation';
 import DeliveryBoyScreen from '../Screen/DeliveryBoyScreen';
+import Header from '../componet/Header';
 const AuthStack = createStackNavigator();
 const AuthNavigation = () => {
   const { user } = useContext(AuthContext)
@@ -19,11 +20,13 @@ const AuthNavigation = () => {
         <AuthStack.Screen
         name='DeliveryBoy'
         component={DeliveryBoyScreen}
+      
         />
         :
         <AuthStack.Screen
           name="HomeNavigation"
          component={HomeNavigation}
+         
         />
         :
         <>

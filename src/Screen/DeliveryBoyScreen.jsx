@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, Text, View, FlatList, RefreshControl } from 'react-native';
-import { getData } from '../common/someCommonFunction';
-import { API_ORDERVIEW_DELIVERY } from '../common/apiURL';
+import { getData, updateData } from '../common/someCommonFunction';
+import { API_ORDER, API_ORDERUPADTE_DELIVERY, API_ORDERVIEW_DELIVERY } from '../common/apiURL';
 import { Button } from 'react-native-elements';
+import { AuthContext } from '../context/authContex';
+import Header from '../componet/Header';
 
 const DeliveryBoyScreen = () => {
   const [orders, setOrders] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const { user } = useContext(AuthContext);
 
   const loadOrders = async () => {
     try {
@@ -25,9 +28,37 @@ const DeliveryBoyScreen = () => {
     loadOrders();
   }, []);
 
-  const handleAccept = (orderId) => {
-    // Handle the accept action
+  const handleAccept = async (orderId) => {
     console.log('Accepting order:', orderId);
+    let formdata = new FormData();
+    formdata.append('_method', 'put');
+    formdata.append("status_delivery", "accept");
+    formdata.append("deliveryuser_id", user.email);
+
+    try {
+      await updateData(formdata, API_ORDERUPADTE_DELIVERY + orderId, "Your request updated");
+      
+      // Reload orders after successful update
+      loadOrders();
+    } catch (error) {
+      console.error('Failed to update order:', error);
+    }
+  };
+  const handleCollect = async (orderId) => {
+    console.log('Accepting order:', orderId);
+    let formdata = new FormData();
+    formdata.append('_method', 'put');
+    formdata.append("status_payment", "paid");
+   
+
+    try {
+      await updateData(formdata, API_ORDER+orderId, "Payement complete");
+      
+      // Reload orders after successful update
+      loadOrders();
+    } catch (error) {
+      console.error('Failed to update order:', error);
+    }
   };
 
   const renderOrderItem = ({ item }) => (
@@ -79,22 +110,36 @@ const DeliveryBoyScreen = () => {
           <Button
             title={`Collect ₹${(item.amount + item.delivery_fees - item.discount_amount).toFixed(2)}`}
             buttonStyle={styles.paymentButton}
-            onPress={() => handleAccept(item.id)}
+            disabled={item.status_restaurant!=='delivery'}
+            onPress={() => handleCollect(item.id)}
           />
         )}
+        {item.status_restaurant === 'accept' && item.status_delivery !== 'accept' &&(
         <Button
           title="Accept"
           buttonStyle={styles.acceptButton}
           disabled={item.status_restaurant !== 'accept' || item.status_delivery === 'accept'}
           onPress={() => handleAccept(item.id)}
         />
+      )}
+       {item.status_payment !== 'pending' &&(
+        <Button
+          title="Delivery"
+          buttonStyle={styles.acceptButton}      
+          onPress={() => handleAccept(item.id)}
+        />
+      )}
       </View>
     </View>
   );
 
   return (
     <View style={styles.container}>
+      <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+   
       <Text style={styles.title}>Delivery Orders</Text>
+      <Header/>
+      </View>
       <FlatList
         data={orders}
         keyExtractor={(order) => order.id.toString()}

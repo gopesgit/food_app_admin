@@ -77,7 +77,7 @@ export const updateData = async (formdata, APIURL,message="") => {
     ToastAndroid.showWithGravity(message, ToastAndroid.LONG, ToastAndroid.TOP)
     return response
   } catch (error) {
-    console.error('Something worng! ', error);
+    //console.error('Something worng! ', error);
     console.error('Error:', error.response ? error.response.data : error.message);
     ToastAndroid.showWithGravity('Something worng! ', ToastAndroid.LONG, ToastAndroid.TOP)
   }
