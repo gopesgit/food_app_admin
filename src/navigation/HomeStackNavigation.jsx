@@ -13,6 +13,7 @@ import CouponScreen from '../Screen/CouponScreen';
 import CouponForm from '../Screen/CouponForm';
 import AddFoodCatagorie from '../Screen/AddFoodCatagorie';
 import EditCategoryScreen from '../Screen/EditCategoryScreen';
+import DeliveryOrderScreen from '../Screen/DeliveryOrderScreen';
 const HomeStack = createStackNavigator();
 const HomeStackNavigation = () => {
     return (
@@ -44,6 +45,10 @@ const HomeStackNavigation = () => {
              <HomeStack.Screen
                 name="Order-List"
                 component={OrderScreen}
+            />
+            <HomeStack.Screen
+                name="Delivery-Order-List"
+                component={DeliveryOrderScreen}
             />
             <HomeStack.Screen
                 name="DeliveryFeeScreen"

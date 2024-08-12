@@ -44,6 +44,20 @@ const DeliveryBoyScreen = () => {
       console.error('Failed to update order:', error);
     }
   };
+  const handleDelivery = async (orderId) => {
+    console.log('Develry order:', orderId);
+    let formdata = new FormData();
+    formdata.append('_method', 'put');
+    formdata.append("status_delivery", "delivery");
+    try {
+      await updateData(formdata,API_ORDER + orderId, "Your request updated");
+      
+      // Reload orders after successful update
+      loadOrders();
+    } catch (error) {
+      console.error('Failed to update order:', error);
+    }
+  };
   const handleCollect = async (orderId) => {
     console.log('Accepting order:', orderId);
     let formdata = new FormData();
@@ -64,6 +78,7 @@ const DeliveryBoyScreen = () => {
   const renderOrderItem = ({ item }) => (
     <View style={styles.orderContainer}>
       <Text style={styles.orderDate}>Date: {item.date}</Text>
+      <Text style={styles.orderDate}>Order: {item.id}</Text>
       {/* Uncomment if you want to display the restaurant logo */}
       {/* <Image source={{ uri: item.restaurant.logo_url }} style={styles.restaurantLogo} /> */}
       <Text style={styles.deliveryAddressTitle}>Pickup Address:</Text>
@@ -126,7 +141,7 @@ const DeliveryBoyScreen = () => {
         <Button
           title="Delivery"
           buttonStyle={styles.acceptButton}      
-          onPress={() => handleAccept(item.id)}
+          onPress={() => handleDelivery(item.id)}
         />
       )}
       </View>
@@ -141,7 +156,7 @@ const DeliveryBoyScreen = () => {
       <Header/>
       </View>
       <FlatList
-        data={orders}
+        data={orders.filter((item)=>item.status_delivery!=='delivery')}
         keyExtractor={(order) => order.id.toString()}
         renderItem={renderOrderItem}
         refreshControl={

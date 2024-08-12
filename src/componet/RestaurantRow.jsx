@@ -100,7 +100,7 @@ const RestaurantRow = ({ item, onRefresh }) => {
         {pendingOrders.length > 0 && (
           <TouchableOpacity
             style={styles.buttonDelivery}
-            onPress={() => navigation.navigate("Order-List", { oitem: pendingOrders })}
+            onPress={() => navigation.navigate("Delivery-Order-List", { id: item.id })}
           >
             <Icon name="add" color="#fff" size={18} />
             <Text style={styles.actionButtonText}>Delivery ({pendingOrders.length})</Text>
